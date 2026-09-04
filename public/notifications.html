@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications — MediPortal</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --brand:#3D5AF1;
+    --brand-deep:#2E44C7;
+    --navy:#16326B;
+    --ink-soft:#5B6B85;
+    --ink-faint:#8895A9;
+    --line:#E7EAF2;
+    --bg-main:#F4F7FC;
+  }
+  
+  body{ 
+    font-family:'Inter',sans-serif; 
+    background:var(--bg-main); 
+    color:var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top Navigation */
+  .navbar-brand{ font-weight:800; color:var(--navy) !important; }
+  .brand-mark{ width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,#3D5AF1,#1F2FA0); display:flex; align-items:center; justify-content:center; }
+  .top-nav{ background:#EEF2FB; border-bottom:1px solid #E1E7F5; }
+  .top-nav .nav-link{ color:#2A3B57; font-weight:500; font-size:14.5px; }
+
+  /* Layout & Sidebar */
+  .layout{ display:flex; flex:1; }
+  .sidebar{ width:220px; border-right:1px solid var(--line); background:#fff; display:flex; flex-direction:column; justify-content:space-between; padding:24px 16px; flex-shrink:0; }
+  .side-link{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:9px; color:#4A5568; font-weight:500; font-size:14px; text-decoration:none; margin-bottom:4px; }
+  .side-link:hover{ background:#F5F7FB; color:var(--navy); }
+  .side-link.active{ background:var(--brand); color:#fff; font-weight:600; }
+  .side-link.danger{ color:#DC3545; }
+  .side-link.danger:hover{ background:#FDEDEE; }
+
+  /* Main Container */
+  main{ flex:1; padding:32px 48px; background:#F8FAFC; min-width:0; }
+
+  /* Section Title Header */
+  .page-title-row{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; }
+
+  .btn-mark-read{
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 600;
+    font-size: 13.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .btn-mark-read:hover{ background: var(--brand-deep); }
+
+  .btn-nav-settings {
+    background: #ffffff;
+    color: var(--navy);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 600;
+    font-size: 13.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .btn-nav-settings:hover {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+    color: var(--brand);
+  }
+
+  /* Filter Toolbar */
+  .filter-bar{
+    background: #EEF2FB;
+    border-radius: 12px;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .filter-pill{
+    background: transparent;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 6px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .filter-pill.active{
+    background: #ffffff;
+    color: var(--navy);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .badge-count{
+    background: var(--brand);
+    color: white;
+    font-size: 11px;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+  }
+
+  .btn-sort{
+    background: transparent;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Notification Items */
+  .notification-card{
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .notification-card:hover{
+    transform: translateY(-1px);
+    border-color: #CBD5E1;
+  }
+
+  .notification-card.unread{
+    border-left: 5px solid var(--brand);
+  }
+
+  .icon-box{
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #F0F4FE;
+    color: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .dot-unread{
+    width: 7px;
+    height: 7px;
+    background: var(--brand);
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 4px;
+  }
+
+  .meta-tag{
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .category-pill{
+    background: #F1F5F9;
+    color: var(--ink-soft);
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .link-details{
+    color: var(--brand);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .link-details:hover{ text-decoration: underline; }
+
+  /* Security Footer Note */
+  .security-footer-note{
+    text-align: center;
+    margin-top: 36px;
+    margin-bottom: 12px;
+  }
+  .security-footer-note p{
+    font-size: 11px;
+    color: var(--ink-faint);
+    max-width: 580px;
+    margin: 8px auto 0 auto;
+    line-height: 1.5;
+  }
+
+  /* Page Footer */
+  footer{ 
+    border-top:1px solid var(--line); 
+    padding:16px 36px; 
+    font-size:12px; 
+    color:var(--ink-faint); 
+    background:#fff; 
+  }
+  footer a{ color:var(--ink-faint); text-decoration:none; margin-left:20px; }
+
+  @media(max-width: 900px){
+    .sidebar{ display:none; }
+    main{ padding: 20px; }
+    .notification-card{ flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAVIGATION -->
+<nav class="navbar top-nav py-2">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="mediportal-dashboard.html">
+      <span class="brand-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg>
+      </span>
+      MediPortal
+    </a>
+    <ul class="navbar-nav flex-row gap-4 mx-auto">
+      <li class="nav-item"><a class="nav-link" href="mediportal-dashboard.html">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="mediportal-appointments-list.html">Appointments</a></li>
+      <li class="nav-item"><a class="nav-link" href="lab-results.html">Records</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Messages</a></li>
+    </ul>
+    <div class="d-flex align-items-center gap-3">
+      <div class="input-group input-group-sm d-none d-md-flex" style="width:220px;">
+        <span class="input-group-text bg-white border-end-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA6BB" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        </span>
+        <input type="text" class="form-control border-start-0" placeholder="Search records...">
+      </div>
+      <div class="position-relative">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4A5568" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle"></span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <div id="navUserInitials" class="rounded-circle d-flex align-items-center justify-content-center"
+             style="width:32px; height:32px; background:var(--brand); color:#fff; font-weight:700; font-size:12px;">
+          SJ
+        </div>
+        <div class="d-none d-sm-block" style="line-height:1.2;">
+          <div class="fw-semibold" id="navUserName" style="font-size:13px;">Loading...</div>
+          <div class="text-secondary" id="navPatientId" style="font-size:11px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar">
+    <div>
+      <a href="mediportal-dashboard.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="mediportal-appointments-list.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+        Appointments
+      </a>
+      <a href="lab-results.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2h6l1 4H8l1-4z"/><path d="M8 6l-3 14a2 2 0 002 2h10a2 2 0 002-2L16 6"/></svg>
+        Lab Results
+      </a>
+      <a href="#" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>
+        Messages
+      </a>
+      <a href="#" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        Health Profile
+      </a>
+      <a href="notifications.html" class="side-link active">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+        Notifications
+      </a>
+    </div>
+    <div>
+      <a href="mediportal-settings.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+        Settings
+      </a>
+      <a href="mediportal-signin.html" class="side-link danger">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main>
+    
+    <!-- Title & Top Action -->
+    <div class="page-title-row">
+      <div>
+        <h1 class="h3 fw-bold mb-1">Notifications</h1>
+        <p class="text-secondary mb-0" style="font-size: 14px;">Stay updated with your latest health alerts and portal activity.</p>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <a href="reminder-settings.html" class="btn-nav-settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+          Notification Settings
+        </a>
+        <button class="btn-mark-read" id="markAllReadBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Mark All as Read
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="d-flex align-items-center gap-2" id="filterContainer">
+        <button class="filter-pill" data-filter="all">ALL</button>
+        <button class="filter-pill active" data-filter="unread">
+          UNREAD <span class="badge-count" id="unreadCount">0</span>
+        </button>
+        <button class="filter-pill" data-filter="read">READ</button>
+      </div>
+      <button class="btn-sort">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        SORT BY NEWEST
+      </button>
+    </div>
+
+    <!-- Notification Cards List -->
+    <div id="notificationsList">
+      <p class="text-center py-4 text-muted">Loading notifications...</p>
+    </div>
+
+    <!-- Security Footer Info -->
+    <div class="security-footer-note">
+      <div class="d-flex justify-content-center gap-4 text-secondary" style="font-size: 11px; font-weight: 700;">
+        <span>🔒 HIPAA COMPLIANT</span>
+        <span>🛡️ SECURE DATA ACCESS</span>
+      </div>
+      <p>MediPortal Connect ensures your medical information is protected using industry-standard encryption. Access to sensitive notifications is logged for clinical quality assurance.</p>
+    </div>
+
+  </main>
+</div>
+
+<!-- PAGE FOOTER -->
+<footer>
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <span>© 2026 MediPortal Connect. All rights reserved. HIPAA Compliant Patient Portal.</span>
+    <div>
+      <a href="#">PRIVACY POLICY</a>
+      <a href="#">TERMS OF SERVICE</a>
+      <a href="#">SUPPORT CENTER</a>
+<a href="faqs.html">FAQs</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/auth-redirect.js"></script>
+<script>
+  let currentFilter = 'unread';
+  let allNotifications = [];
+
+  function handleUnauthorized(res) {
+    if (res.status === 401) {
+      redirectToLogin();
+      return true;
+    }
+    return false;
+  }
+
+  function updateUnreadCount() {
+    const unread = allNotifications.filter(n => !n.is_read).length;
+    document.getElementById('unreadCount').textContent = unread;
+  }
+
+  function fetchNotifications(filter) {
+    const listEl = document.getElementById('notificationsList');
+    listEl.innerHTML = '<p class="text-center py-4 text-muted">Loading notifications...</p>';
+
+    fetch(`/api/notifications?filter=${filter}`)
+      .then(res => {
+        if (handleUnauthorized(res)) return null;
+        return res.json();
+      })
+      .then(data => {
+        if (!data) return;
+        allNotifications = data.notifications || [];
+        updateUnreadCount();
+        renderNotifications();
+      })
+      .catch(err => {
+        console.error('Notification error:', err);
+        listEl.innerHTML = '<p class="text-center py-4 text-danger">Error loading notifications.</p>';
+      });
+  }
+
+  function renderNotifications() {
+    const listEl = document.getElementById('notificationsList');
+
+    if (allNotifications.length === 0) {
+      listEl.innerHTML = '<p class="text-center py-4 text-muted">No notifications found.</p>';
+      return;
+    }
+
+    listEl.innerHTML = allNotifications.map(notif => {
+      const unreadClass = notif.is_read ? '' : 'unread';
+      const iconBg = notif.is_read ? 'background:#F8FAFC; color:#64748B;' : '';
+      const dot = notif.is_read ? '' : '<span class="dot-unread"></span>';
+      return `
+        <div class="notification-card ${unreadClass}" data-id="${notif.id}">
+          <div class="d-flex align-items-center gap-3">
+            <div class="icon-box" style="${iconBg}">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+            </div>
+            <div>
+              <div class="fw-bold mb-1" style="font-size: 15px;">${notif.title} ${dot}</div>
+              <p class="text-secondary mb-2" style="font-size: 13.5px;">${notif.message}</p>
+              <div class="d-flex align-items-center gap-2">
+                <span class="meta-tag">${notif.created_at}</span>
+                <span class="text-secondary">•</span>
+                <span class="category-pill">${notif.category.toUpperCase()}</span>
+              </div>
+            </div>
+          </div>
+          <button class="link-details ms-3 mark-read-btn" data-id="${notif.id}" style="background:none; border:none;">
+            ${notif.is_read ? '' : 'Mark as Read'}
+          </button>
+        </div>
+      `;
+    }).join('');
+
+    // Attach mark-as-read handlers
+    document.querySelectorAll('.mark-read-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const notifId = this.dataset.id;
+        fetch(`/api/notifications/${notifId}/read`, { method: 'PUT' })
+          .then(res => {
+            if (handleUnauthorized(res)) return;
+            return res.json();
+          })
+          .then(() => {
+            fetchNotifications(currentFilter);
+          })
+          .catch(err => console.error('Mark read error:', err));
+      });
+    });
+  }
+
+  // Filter buttons
+  document.getElementById('filterContainer').addEventListener('click', function(e) {
+    const btn = e.target.closest('.filter-pill');
+    if (!btn) return;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    fetchNotifications(currentFilter);
+  });
+
+  // Mark all as read
+  document.getElementById('markAllReadBtn').addEventListener('click', function() {
+    fetch('/api/notifications/read-all', { method: 'PUT' })
+      .then(res => {
+        if (handleUnauthorized(res)) return;
+        return res.json();
+      })
+      .then(() => {
+        fetchNotifications(currentFilter);
+      })
+      .catch(err => console.error('Mark all error:', err));
+  });
+
+  // User info
+  fetch('/api/auth/me')
+    .then(res => {
+      if (handleUnauthorized(res)) return null;
+      return res.json();
+    })
+    .then(data => {
+      if (data && data.user) {
+        const fullName = data.user.full_name;
+        const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('navUserName').textContent = fullName;
+        document.getElementById('navPatientId').textContent = `Patient ID: ${data.user.patient_id}`;
+        document.getElementById('navUserInitials').textContent = initials;
+      }
+    })
+    .catch(() => {});
+
+  // Initial load
+  fetchNotifications(currentFilter);
+</script>
+<script src="/js/logout.js"></script>
+</body>
+</html>

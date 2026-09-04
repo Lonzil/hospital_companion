@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQs — MediPortal</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #3D5AF1;
+      --brand-deep: #2E44C7;
+      --navy: #16326B;
+      --ink-soft: #5B6B85;
+      --ink-faint: #8895A9;
+      --line: #E7EAF2;
+      --bg-light: #F5F7FB;
+      --success: #16A34A;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #FFFFFF;
+      color: var(--navy);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Public Nav */
+    .public-nav {
+      background: #EEF2FB;
+      border-bottom: 1px solid #E1E7F5;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      color: var(--navy);
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #3D5AF1, #1F2FA0);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #2A3B57;
+      font-weight: 600;
+      font-size: 14px;
+      margin-left: 20px;
+    }
+    .nav-links a:hover { color: var(--brand); }
+
+    .btn-outline-brand {
+      border-color: var(--brand);
+      color: var(--brand);
+      font-weight: 600;
+    }
+    .btn-outline-brand:hover {
+      background: var(--brand);
+      color: #fff;
+    }
+    .btn-brand {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+      font-weight: 600;
+    }
+    .btn-brand:hover {
+      background: var(--brand-deep);
+      border-color: var(--brand-deep);
+      color: #fff;
+    }
+
+    /* Hero */
+    .hero-section {
+      background: linear-gradient(135deg, #1C2D42 0%, #354B66 100%);
+      color: white;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .hero-section h1 {
+      font-weight: 800;
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .hero-section p {
+      color: #CBD5E1;
+      font-size: 15px;
+      margin: 0;
+    }
+
+    /* Content */
+    .content-section {
+      padding: 50px 0;
+    }
+    .faq-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .faq-intro {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .faq-intro h2 {
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .faq-intro p {
+      color: var(--ink-soft);
+    }
+
+    /* Accordion styling overrides */
+    .accordion-button {
+      font-weight: 600;
+      color: var(--navy);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px !important;
+      box-shadow: none;
+    }
+    .accordion-button:not(.collapsed) {
+      color: var(--brand);
+      background: #F8FAFF;
+      border-color: var(--brand);
+    }
+    .accordion-button:focus {
+      box-shadow: 0 0 0 3px rgba(61,90,241,0.15);
+    }
+    .accordion-item {
+      border: none;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .accordion-body {
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.6;
+      border-top: none;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--navy);
+      color: #94A3B8;
+      padding: 40px 0 20px 0;
+      font-size: 13px;
+    }
+    footer h6 {
+      color: #fff;
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    footer a {
+      color: #94A3B8;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 6px;
+    }
+    footer a:hover { color: #fff; }
+
+    @media (max-width: 768px) {
+      .hero-section h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Public Navigation -->
+  <nav class="public-nav">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg>
+      </span>
+      MediPortal
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact-help.html">Help</a>
+      <a href="mediportal-signin.html">Sign In</a>
+      <a href="mediportal-signup.html">Create Account</a>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="mediportal-signin.html" class="btn btn-sm btn-outline-brand">Sign In</a>
+      <a href="mediportal-signup.html" class="btn btn-sm btn-brand">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <h1>Frequently Asked Questions</h1>
+    <p>Quick answers to the most common questions about MediPortal.</p>
+  </section>
+
+  <!-- Content -->
+  <section class="content-section">
+    <div class="container faq-container">
+      <div class="faq-intro">
+        <h2>How can we help you?</h2>
+        <p>Browse the topics below or contact our support team if you need further assistance.</p>
+      </div>
+
+      <div class="accordion" id="faqAccordion">
+        
+        <!-- Q1 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+              How do I create an account?
+            </button>
+          </h2>
+          <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Click the <strong>“Get Started”</strong> or <strong>“Create Account”</strong> button on the homepage. Fill in your full name, email address, phone number, and a secure password. After submitting, you’ll receive a verification email. Click the link in that email to activate your account.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+              I didn’t receive my verification email. What should I do?
+            </button>
+          </h2>
+          <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Please check your spam or junk folder. If you still don’t see it, make sure you entered the correct email address. You can request a new verification email by signing in and following the prompt, or contact support for help.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+              How do I book an appointment?
+            </button>
+          </h2>
+          <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Once logged in, go to the <strong>Appointments</strong> section and click <strong>“Book New Appointment”</strong>. You’ll be guided through selecting a department, doctor, date, and time. Review your details and confirm. You’ll receive a confirmation notification.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+              Can I reschedule or cancel my appointment?
+            </button>
+          </h2>
+          <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes. From your appointment list, select the appointment you want to change. Use the <strong>“Reschedule”</strong> button to pick a new date and time, or <strong>“Cancel”</strong> to cancel it. Please cancel at least 24 hours in advance to avoid any potential fees.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+              How do I view my lab results?
+            </button>
+          </h2>
+          <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Navigate to the <strong>Lab Results</strong> section from your dashboard. You’ll see a list of your available reports. Click <strong>“View Details”</strong> on any report to see the full results, including test components and your doctor’s comments.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+              Is my health information secure?
+            </button>
+          </h2>
+          <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes. We use industry-standard AES-256 encryption for all data and follow HIPAA-compliance practices. Your information is only accessible to you and the healthcare providers involved in your care.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+              What is AI Support and how does it work?
+            </button>
+          </h2>
+          <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              The AI Support Assistant provides emotional support and helps with logistical questions like booking appointments or understanding lab results. It does not provide medical advice. If you have clinical questions, the AI will redirect you to your doctor or care team.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+              How do I update my notification preferences?
+            </button>
+          </h2>
+          <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Go to <strong>Settings</strong> and scroll to <strong>Notification Preferences</strong>. You can enable or disable email, SMS, appointment reminders, and lab result notifications. Click <strong>“Save Preferences”</strong> to apply changes.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq9">
+              What should I do if I forget my password?
+            </button>
+          </h2>
+          <div id="faq9" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Click <strong>“Forgot Password?”</strong> on the sign‑in page. Enter your registered email address and we’ll send you a password reset link. The link expires after 30 minutes for security.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq10">
+              How can I contact support?
+            </button>
+          </h2>
+          <div id="faq10" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Visit the <a href="contact-help.html">Contact & Help</a> page for phone and email support. You can also use the AI Support Assistant for quick guidance.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <h6>MediPortal</h6>
+          <p style="color:#94A3B8; font-size:12px; margin-top:10px;">Your trusted hospital companion for managing appointments, lab results, and emotional support.</p>
+        </div>
+        <div class="col-md-4">
+          <h6>Quick Links</h6>
+          <a href="index.html">Home</a>
+          <a href="about.html">About Us</a>
+          <a href="mediportal-signin.html">Patient Portal</a>
+          <a href="mediportal-signup.html">Create Account</a>
+        </div>
+        <div class="col-md-4">
+          <h6>Support</h6>
+          <a href="contact-help.html">Contact & Help</a>
+          <a href="faqs.html">FAQs</a>
+          <a href="ai-support.html">AI Support</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+        </div>
+      </div>
+      <hr style="border-color:#334155;">
+      <p class="text-center mb-0" style="font-size:12px;">© 2026 MediPortal Connect. All rights reserved. HIPAA Compliant Platform.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediPortal — Hospital Companion</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #3D5AF1;
+      --brand-deep: #2E44C7;
+      --navy: #16326B;
+      --ink-soft: #5B6B85;
+      --ink-faint: #8895A9;
+      --line: #E7EAF2;
+      --bg-light: #F5F7FB;
+      --success: #16A34A;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #FFFFFF;
+      color: var(--navy);
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      color: var(--navy) !important;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #3D5AF1, #1F2FA0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .top-nav {
+      background: #EEF2FB;
+      border-bottom: 1px solid #E1E7F5;
+    }
+    .top-nav .nav-link {
+      color: #2A3B57;
+      font-weight: 500;
+      font-size: 14.5px;
+    }
+    .top-nav .nav-link:hover {
+      color: var(--brand);
+    }
+
+    .btn-brand {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+      font-weight: 600;
+    }
+    .btn-brand:hover {
+      background: var(--brand-deep);
+      border-color: var(--brand-deep);
+      color: #fff;
+    }
+    .btn-outline-brand {
+      border-color: var(--brand);
+      color: var(--brand);
+      font-weight: 600;
+    }
+    .btn-outline-brand:hover {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    /* Updated hero section with doctors image + overlay */
+    .hero-section {
+      background:
+        linear-gradient(135deg, rgba(28, 45, 66, 0.88) 0%, rgba(53, 75, 102, 0.88) 100%),
+        url('https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+      padding: 80px 20px;
+      color: white;
+      text-align: center;
+    }
+    .hero-section h1 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .hero-section p {
+      font-size: 16px;
+      color: #CBD5E1;
+      max-width: 600px;
+      margin: 0 auto 24px auto;
+      line-height: 1.5;
+    }
+
+    .feature-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px;
+      height: 100%;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--brand);
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: #EEF2FB;
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .feature-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 6px;
+      color: var(--navy);
+    }
+    .feature-desc {
+      font-size: 13.5px;
+      color: var(--ink-faint);
+      margin: 0;
+    }
+
+    .trust-badge {
+      background: #EEF2FB;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--brand);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    footer {
+      background: var(--navy);
+      color: #94A3B8;
+      padding: 40px 0 20px 0;
+      font-size: 13px;
+    }
+    footer h6 {
+      color: #fff;
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    footer a {
+      color: #94A3B8;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 6px;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .hero-section h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Public Navigation -->
+  <nav class="navbar top-nav py-2">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <span class="brand-mark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg>
+        </span>
+        MediPortal
+      </a>
+      <ul class="navbar-nav flex-row gap-4 mx-auto d-none d-md-flex">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="mediportal-signin.html">Sign In</a></li>
+        <li class="nav-item"><a class="nav-link" href="mediportal-signup.html">Create Account</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2">
+        <a href="mediportal-signin.html" class="btn btn-sm btn-outline-brand">Sign In</a>
+        <a href="mediportal-signup.html" class="btn btn-sm btn-brand">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <h1>Your Health Companion, All in One Place</h1>
+    <p>Book appointments, view lab results, get AI support, and receive personalized encouragement — securely and conveniently.</p>
+    <a href="mediportal-signup.html" class="btn btn-brand px-4 py-2 me-2">Create Free Account</a>
+    <a href="mediportal-signin.html" class="btn btn-outline-light px-4 py-2">Sign In</a>
+  </section>
+
+  <!-- Features Section -->
+  <section class="container py-5">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold" style="color: var(--navy);">Why Choose MediPortal?</h2>
+      <p class="text-muted">Everything you need for a smoother healthcare journey.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+          </div>
+          <div class="feature-title">Appointment Booking</div>
+          <p class="feature-desc">Easily book, reschedule, or cancel appointments with your preferred doctor.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="feature-title">Lab Results</div>
+          <p class="feature-desc">Access your lab reports and test components securely anytime.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <div class="feature-title">AI Support</div>
+          <p class="feature-desc">Chat with our empathetic AI assistant for guidance and encouragement.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          </div>
+          <div class="feature-title">Smart Notifications</div>
+          <p class="feature-desc">Stay updated with appointment confirmations, lab alerts, and reminders.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust / Security Section -->
+  <section class="py-5" style="background: var(--bg-light);">
+    <div class="container text-center">
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <span class="trust-badge">🔒 HIPAA Compliant</span>
+        <span class="trust-badge">🛡️ Secure Encryption</span>
+        <span class="trust-badge">🤖 AI-Powered Support</span>
+        <span class="trust-badge">⏰ 24/7 Access</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <h6>MediPortal</h6>
+          <p style="color:#94A3B8; font-size:12px; margin-top:10px;">Your trusted hospital companion for managing appointments, lab results, and emotional support.</p>
+        </div>
+        <div class="col-md-4">
+          <h6>Quick Links</h6>
+          <a href="index.html">Home</a>
+          <a href="about.html">About Us</a>
+          <a href="mediportal-signin.html">Patient Portal</a>
+          <a href="mediportal-signup.html">Create Account</a>
+        </div>
+        <div class="col-md-4">
+          <h6>Contact</h6>
+          <a href="contact-help.html">Contact & Help</a>
+<a href="faqs.html">FAQs</a>
+          <a href="ai-support.html">AI Support</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+        </div>
+      </div>
+      <hr style="border-color:#334155;">
+      <p class="text-center mb-0" style="font-size:12px;">© 2026 MediPortal Connect. All rights reserved. HIPAA Compliant Platform.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

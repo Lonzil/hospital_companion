@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Support Assistant — MediPortal</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --brand:#3D5AF1;
+    --brand-deep:#2E44C7;
+    --navy:#16326B;
+    --ink-soft:#5B6B85;
+    --ink-faint:#8895A9;
+    --line:#E7EAF2;
+    --chat-bg:#F5F8FF;
+    --user-msg:#EEF2FC;
+  }
+  
+  body{ 
+    font-family:'Inter',sans-serif; 
+    background:#FAFCFF; 
+    color:var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top Nav Styling */
+  .navbar-brand{ font-weight:800; color:var(--navy) !important; }
+  .brand-mark{ width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,#3D5AF1,#1F2FA0); display:flex; align-items:center; justify-content:center; }
+  .top-nav{ background:#EEF2FB; border-bottom:1px solid #E1E7F5; }
+  .top-nav .nav-link{ color:#2A3B57; font-weight:500; font-size:14.5px; }
+  .top-nav .nav-link.active{ font-weight:600; }
+
+  /* Layout & Sidebar */
+  .layout{ display:flex; flex:1; }
+  .sidebar{ width:220px; border-right:1px solid var(--line); background:#fff; display:flex; flex-direction:column; justify-content:space-between; padding:24px 16px; flex-shrink:0; }
+  .side-link{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:9px; color:#4A5568; font-weight:500; font-size:14px; text-decoration:none; margin-bottom:4px; }
+  .side-link:hover{ background:#F5F7FB; color:var(--navy); }
+  .side-link.active{ background:var(--brand); color:#fff; font-weight:600; }
+  .side-link.danger{ color:#DC3545; }
+  .side-link.danger:hover{ background:#FDEDEE; }
+
+  /* Main Container */
+  main{ flex:1; display:flex; flex-direction:column; background:#F8FAFC; min-width:0; }
+
+  /* Chat Header */
+  .chat-header{ 
+    background:#fff; 
+    padding:16px 28px; 
+    border-bottom:1px solid var(--line); 
+    display:flex; 
+    align-items:center; 
+    justify-content:space-between; 
+  }
+  .ai-avatar-hdr{ 
+    width:40px; 
+    height:40px; 
+    border-radius:10px; 
+    background:var(--brand); 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+    color:#fff;
+  }
+  .status-tag{ 
+    font-size:11px; 
+    font-weight:700; 
+    color:#16A34A; 
+    letter-spacing:0.04em; 
+    display:flex; 
+    align-items:center; 
+    gap:6px; 
+  }
+  .status-dot{ width:7px; height:7px; background:#16A34A; border-radius:50%; }
+
+  /* Chat Content Body */
+  .chat-body{ 
+    flex:1; 
+    padding:28px 36px; 
+    overflow-y:auto; 
+    display:flex; 
+    flex-direction:column; 
+    gap:20px; 
+  }
+  
+  .chat-bubble-wrap{ display:flex; gap:12px; max-width:80%; align-items:flex-start; }
+  .chat-bubble-wrap.user{ align-self:flex-end; flex-direction:row-reverse; }
+
+  .avatar-sm{ width:32px; height:32px; border-radius:50%; flex-shrink:0; object-fit:cover; }
+  .avatar-ai-sm{ width:32px; height:32px; border-radius:50%; background:var(--brand); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px; }
+  .avatar-user-sm{
+    width:32px; height:32px; border-radius:50%;
+    background:#DCE3F5; color:var(--navy); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px; font-weight:700;
+  }
+
+  .bubble-ai{ 
+    background:var(--brand); 
+    color:#fff; 
+    padding:14px 20px; 
+    border-radius:18px 18px 18px 4px; 
+    font-size:14px; 
+    line-height:1.5; 
+    box-shadow: 0 2px 8px rgba(61,90,241,0.15);
+  }
+  .bubble-user{ 
+    background:var(--user-msg); 
+    color:var(--navy); 
+    padding:14px 20px; 
+    border-radius:18px 18px 4px 18px; 
+    font-size:14px; 
+    line-height:1.5; 
+  }
+  .msg-time{ font-size:11px; color:var(--ink-faint); margin-top:4px; font-weight:500; }
+
+  /* Quick Suggestion Cards Floating Overlay */
+  .quick-options-container{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    border: 1px solid var(--line);
+    margin-top: 10px;
+  }
+  
+  .quick-card{
+    background:#fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .quick-card:hover{
+    border-color: var(--brand);
+    background: #F8FAFF;
+    transform: translateY(-2px);
+  }
+  .quick-icon{
+    color: var(--brand);
+    margin-bottom: 8px;
+  }
+  .quick-card-title{
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--navy);
+    text-transform: uppercase;
+  }
+
+  /* Footer Input Area */
+  .chat-footer{
+    background: #fff;
+    padding: 20px 36px;
+    border-top: 1px solid var(--line);
+  }
+  .input-box-wrapper{
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #F8FAFC;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 8px 16px;
+  }
+  .input-box-wrapper:focus-within{
+    border-color: var(--brand);
+    background: #fff;
+  }
+  .chat-input{
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+    padding: 8px 0;
+    color: var(--navy);
+  }
+  .send-btn{
+    background: var(--brand);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .send-btn:hover{ background: var(--brand-deep); }
+
+  .chat-meta-footer{
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  /* Page Footer */
+  footer{ 
+    border-top:1px solid var(--line); 
+    padding:16px 36px; 
+    font-size:12px; 
+    color:var(--ink-faint); 
+    background:#fff; 
+  }
+  footer a{ color:var(--ink-faint); text-decoration:none; margin-left:20px; }
+
+  @media (max-width:900px){
+    .sidebar{ display:none; }
+    .quick-options-container{ grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAVIGATION -->
+<nav class="navbar top-nav py-2">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="mediportal-dashboard.html">
+      <span class="brand-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg>
+      </span>
+      MediPortal
+    </a>
+    <ul class="navbar-nav flex-row gap-4 mx-auto">
+      <li class="nav-item"><a class="nav-link" href="mediportal-dashboard.html">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="mediportal-appointments-list.html">Appointments</a></li>
+      <li class="nav-item"><a class="nav-link" href="lab-results.html">Records</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Messages</a></li>
+    </ul>
+    <div class="d-flex align-items-center gap-3">
+      <div class="input-group input-group-sm d-none d-md-flex" style="width:220px;">
+        <span class="input-group-text bg-white border-end-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA6BB" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        </span>
+        <input type="text" class="form-control border-start-0" placeholder="Search records...">
+      </div>
+      <div class="position-relative">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4A5568" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle"></span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <div id="navUserInitials" class="rounded-circle d-flex align-items-center justify-content-center"
+             style="width:32px; height:32px; background:var(--brand); color:#fff; font-weight:700; font-size:12px;">
+          SJ
+        </div>
+        <div class="d-none d-sm-block" style="line-height:1.2;">
+          <div class="fw-semibold" id="navUserName" style="font-size:13px;">Loading...</div>
+          <div class="text-secondary" id="navPatientId" style="font-size:11px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar">
+    <div>
+      <a href="mediportal-dashboard.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="mediportal-appointments-list.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+        Appointments
+      </a>
+      <a href="lab-results.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2h6l1 4H8l1-4z"/><path d="M8 6l-3 14a2 2 0 002 2h10a2 2 0 002-2L16 6"/></svg>
+        Lab Results
+      </a>
+      <a href="#" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>
+        Messages
+      </a>
+      <a href="#" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        Health Profile
+      </a>
+      <a href="ai-support.html" class="side-link active">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        AI Support
+      </a>
+    </div>
+    <div>
+      <a href="mediportal-settings.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+        Settings
+      </a>
+      <a href="mediportal-signin.html" class="side-link danger">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN CHAT INTERFACE -->
+  <main>
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="d-flex align-items-center gap-3">
+        <div class="ai-avatar-hdr">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div>
+          <h1 class="h6 fw-bold mb-0">AI Support Assistant</h1>
+          <div class="text-secondary" style="font-size:12px;">Your caring companion for healthcare support</div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-4">
+        <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 fw-semibold px-3" style="border-color:#CBD5E1; color:var(--brand);" id="newSessionBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          New Session
+        </button>
+        <span class="status-tag">
+          <span class="status-dot"></span> SECURE CONNECTION
+        </span>
+      </div>
+    </div>
+
+    <!-- Chat Messages Stream -->
+    <div class="chat-body" id="chatBody">
+      <!-- Messages will be injected here by JavaScript -->
+    </div>
+
+    <!-- Chat Footer Input -->
+    <div class="chat-footer">
+      <div class="input-box-wrapper">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8895A9" stroke-width="2" class="me-2"><path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg>
+        <input type="text" class="chat-input" id="chatInput" placeholder="Type your message here...">
+        <button class="send-btn" id="sendBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+
+      <div class="chat-meta-footer">
+        <span>✨ AI-POWERED GUIDANCE</span>
+        <span>🛡️ HIPAA COMPLIANT</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- PAGE FOOTER -->
+<footer>
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <span>© 2026 MediPortal Connect. All interactions are securely encrypted.</span>
+    <div>
+      <a href="#">PRIVACY POLICY</a>
+      <a href="#">TERMS OF SERVICE</a>
+      <a href="#">HELP CENTER</a>
+<a href="faqs.html">FAQs</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/auth-redirect.js"></script>
+<script>
+  // ---------- Helpers ----------
+  const chatBody = document.getElementById('chatBody');
+  const chatInput = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const newSessionBtn = document.getElementById('newSessionBtn');
+
+  // User initials (will be set after fetch)
+  let userInitials = 'SJ';
+
+  function getCurrentTime() {
+    return new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  }
+
+  function addAiMessage(text) {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = `
+      <div>
+        <div class="chat-bubble-wrap">
+          <div class="avatar-ai-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <div class="bubble-ai"></div>
+        </div>
+        <div class="msg-time ms-5 ps-1"></div>
+      </div>
+    `;
+    wrapper.querySelector('.bubble-ai').textContent = text;
+    wrapper.querySelector('.msg-time').textContent = getCurrentTime();
+    chatBody.appendChild(wrapper);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function addUserMessage(text) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'd-flex flex-column align-items-end';
+    wrapper.innerHTML = `
+      <div class="chat-bubble-wrap user">
+        <div class="avatar-user-sm"></div>
+        <div class="bubble-user"></div>
+      </div>
+      <div class="msg-time me-5 pe-1"></div>
+    `;
+    wrapper.querySelector('.avatar-user-sm').textContent = userInitials;
+    wrapper.querySelector('.bubble-user').textContent = text;
+    wrapper.querySelector('.msg-time').textContent = getCurrentTime();
+    chatBody.appendChild(wrapper);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function addQuickOptions() {
+    const container = document.createElement('div');
+    container.className = 'quick-options-container my-3 ms-4 ms-md-5';
+    container.innerHTML = `
+      <a href="mediportal-appointments-list.html" style="text-decoration: none;">
+        <div class="quick-card">
+          <div class="quick-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </div>
+          <div class="quick-card-title">About My Appointment</div>
+        </div>
+      </a>
+      <a href="lab-results.html" style="text-decoration: none;">
+        <div class="quick-card">
+          <div class="quick-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+          </div>
+          <div class="quick-card-title">My Lab Results</div>
+        </div>
+      </a>
+      <a href="encouragement.html" style="text-decoration: none;">
+        <div class="quick-card">
+          <div class="quick-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </div>
+          <div class="quick-card-title">General Encouragement</div>
+        </div>
+      </a>
+      <div class="quick-card">
+        <div class="quick-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+        </div>
+        <div class="quick-card-title">Treatment Support</div>
+      </div>
+    `;
+    chatBody.appendChild(container);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function initChat() {
+    chatBody.innerHTML = '';
+    addAiMessage("Hello! I'm here to support you through your healthcare journey. How are you feeling today?");
+    addQuickOptions();
+  }
+
+  // ---------- User info fetch ----------
+  fetch('/api/auth/me')
+    .then(res => {
+      if (res.status === 401) {
+        redirectToLogin();
+        return null;
+      }
+      return res.json();
+    })
+    .then(data => {
+      if (data && data.user) {
+        const fullName = data.user.full_name;
+        userInitials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('navUserName').textContent = fullName;
+        document.getElementById('navPatientId').textContent = `Patient ID: ${data.user.patient_id}`;
+        document.getElementById('navUserInitials').textContent = userInitials;
+      }
+      initChat();
+    })
+    .catch(() => {
+      initChat();
+    });
+
+  // ---------- Send message ----------
+  async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    addUserMessage(message);
+    chatInput.value = '';
+
+    try {
+      const response = await fetch('/api/ai/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+
+      if (response.status === 401) {
+        redirectToLogin();
+        return;
+      }
+
+      const data = await response.json();
+      if (response.ok) {
+        addAiMessage(data.reply || "I'm here to support you.");
+      } else {
+        addAiMessage(data.error || "I'm here to support you. Please try again.");
+      }
+    } catch (err) {
+      console.error('Chat error:', err);
+      addAiMessage("I'm here to support you. Please try again.");
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  newSessionBtn.addEventListener('click', () => {
+    initChat();
+  });
+
+  // Initial chat loaded after user info fetch
+</script>
+<script src="/js/logout.js"></script>
+</body>
+</html>

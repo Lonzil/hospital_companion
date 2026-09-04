@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab Results — MediPortal</title>
+
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --brand: #3D5AF1;
+    --brand-hover: #2E44C7;
+    --navy: #16326B;
+    --ink-soft: #5B6B85;
+    --ink-faint: #8895A9;
+    --line: #E7EAF2;
+    --bg-light: #F5F7FB;
+    --sidebar-bg: #EEF3FB;
+    --confirmed-green: #10B981;
+    --pending-orange: #F59E0B;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--navy);
+    margin: 0;
+  }
+
+  /* --- Top Navigation --- */
+  .top-nav {
+    background: #EEF2FB;
+    border-bottom: 1px solid #E1E7F5;
+  }
+  .navbar-brand { font-weight: 800; color: var(--navy) !important; }
+  .brand-mark {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #3D5AF1, #1F2FA0);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .top-nav .nav-link { color: #2A3B57; font-weight: 500; font-size: 14px; }
+  .top-nav .nav-link.active { font-weight: 600; }
+
+  /* --- App Layout --- */
+  .app-wrapper {
+    display: flex;
+    min-height: calc(100vh - 57px);
+  }
+
+  /* --- Left Sidebar --- */
+  .sidebar {
+    width: 220px;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--line);
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+  .sidebar-item { margin-bottom: 4px; }
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: var(--ink-soft);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .sidebar-link:hover { color: var(--brand); background: rgba(61, 90, 241, 0.05); }
+  .sidebar-link.active {
+    background: var(--brand);
+    color: #fff !important;
+  }
+
+  /* --- Main Content --- */
+  .main-content {
+    flex: 1;
+    padding: 32px 36px;
+    max-width: 1080px;
+  }
+
+  .header-area {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-title { font-size: 22px; font-weight: 800; margin: 0; color: var(--navy); }
+  .page-sub { font-size: 13px; color: var(--ink-faint); margin-top: 2px; }
+
+  .btn-download-all {
+    background: var(--brand);
+    color: #fff !important;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 10px 18px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+    cursor: pointer;
+  }
+  .btn-download-all:hover { background: var(--brand-hover); }
+
+  /* --- Stat Cards --- */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 20px;
+    position: relative;
+  }
+  .stat-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .stat-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 4px 0 2px 0;
+  }
+  .stat-sub {
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  .stat-icon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: var(--ink-faint);
+  }
+
+  /* --- Controls Bar --- */
+  .controls-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 28px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .search-box-full {
+    flex: 1;
+    position: relative;
+  }
+  .search-box-full input {
+    font-size: 13px;
+    border-radius: 8px;
+    padding-left: 36px;
+    border: 1px solid var(--line);
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-faint);
+  }
+  .filter-select {
+    font-size: 12.5px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  /* --- Results Section --- */
+  .section-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+
+  .lab-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .lab-card-green { border-left: 5px solid var(--confirmed-green); }
+  .lab-card-orange { border-left: 5px solid var(--pending-orange); }
+
+  .lab-info-side {
+    flex: 1;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .test-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 260px;
+  }
+  .test-icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #F0F4FA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand);
+    flex-shrink: 0;
+  }
+  .test-name { font-size: 14px; font-weight: 800; margin: 0; color: var(--navy); }
+  .test-meta-sub { font-size: 10px; font-weight: 800; color: var(--ink-faint); letter-spacing: 0.04em; text-transform: uppercase; margin-top: 2px; }
+
+  .meta-col {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .meta-icon { color: var(--ink-faint); }
+  .meta-label { font-size: 9px; font-weight: 800; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.05em; }
+  .meta-val { font-size: 12px; font-weight: 700; color: var(--navy); margin-top: 1px; }
+
+  .badge-status {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 12px;
+    letter-spacing: 0.05em;
+  }
+  .badge-normal { background: #E6F8F0; color: var(--confirmed-green); }
+  .badge-abnormal { background: #FFF8E6; color: var(--pending-orange); }
+
+  /* Right Action Side */
+  .lab-action-side {
+    width: 140px;
+    padding: 12px 16px;
+    border-left: 1px solid var(--line);
+    background: #FAFCFF;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-self: stretch;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .btn-view-details {
+    background: #EEF2FB;
+    color: var(--brand);
+    font-size: 11.5px;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 6px;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-view-details:hover { background: #E1E8FA; color: var(--brand); }
+  .btn-pdf {
+    background: transparent;
+    color: var(--ink-soft);
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-pdf:hover { color: var(--navy); }
+
+  /* Footer */
+  .page-footer {
+    border-top: 1px solid var(--line);
+    margin-top: 40px;
+    padding-top: 20px;
+    text-align: center;
+    font-size: 10.5px;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 992px) {
+    .app-wrapper { flex-direction: column; }
+    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .lab-info-side { flex-direction: column; align-items: flex-start; }
+    .lab-action-side { width: 100%; border-left: none; border-top: 1px solid var(--line); flex-direction: row; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="navbar top-nav py-2">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="mediportal-dashboard.html">
+      <span class="brand-mark">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg>
+      </span>
+      MediPortal
+    </a>
+    <ul class="navbar-nav flex-row gap-4 mx-auto">
+      <li class="nav-item"><a class="nav-link" href="mediportal-dashboard.html">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="mediportal-appointments-list.html">Appointments</a></li>
+      <li class="nav-item"><a class="nav-link active" href="lab-results.html">Records</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Messages</a></li>
+    </ul>
+    <div class="d-flex align-items-center gap-3">
+      <div class="input-group input-group-sm d-none d-md-flex" style="width:220px;">
+        <span class="input-group-text bg-white border-end-0">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA6BB" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        </span>
+        <input type="text" class="form-control border-start-0" placeholder="Search records...">
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <div id="navUserInitials" class="rounded-circle d-flex align-items-center justify-content-center"
+             style="width:30px; height:30px; background:var(--brand); color:#fff; font-weight:700; font-size:11px;">
+          SJ
+        </div>
+        <div class="d-none d-sm-block" style="line-height:1.2;">
+          <div class="fw-semibold" id="navUserName" style="font-size:12.5px;">Loading...</div>
+          <div class="text-secondary" id="navPatientId" style="font-size:10.5px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN WRAPPER -->
+<div class="app-wrapper">
+  
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a href="mediportal-dashboard.html" class="sidebar-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Dashboard
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="mediportal-appointments-list.html" class="sidebar-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Appointments
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="lab-results.html" class="sidebar-link active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Lab Results
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="#" class="sidebar-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Messages
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="#" class="sidebar-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Health Profile
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a href="mediportal-settings.html" class="sidebar-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            Settings
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="mediportal-signin.html" class="sidebar-link text-danger">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- CONTENT CONTAINER -->
+  <main class="main-content">
+    
+    <!-- HEADER -->
+    <div class="header-area">
+      <div>
+        <h1 class="page-title">Lab Results</h1>
+        <div class="page-sub">View all your test results in one place</div>
+      </div>
+      <button class="btn-download-all" id="downloadAllBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download All Results
+      </button>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <svg class="stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+        <div class="stat-label">TOTAL TESTS</div>
+        <div class="stat-val" id="statTotal">--</div>
+        <div class="stat-sub">Completed tests</div>
+      </div>
+      <div class="stat-card">
+        <svg class="stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+        <div class="stat-label">NORMAL</div>
+        <div class="stat-val" id="statNormal">--</div>
+        <div class="stat-sub">Within healthy range</div>
+      </div>
+      <div class="stat-card">
+        <svg class="stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div class="stat-label">ABNORMAL</div>
+        <div class="stat-val" id="statAbnormal">--</div>
+        <div class="stat-sub">Requires attention</div>
+      </div>
+      <div class="stat-card">
+        <svg class="stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <div class="stat-label">LATEST TEST</div>
+        <div class="stat-val" id="statLatestName">--</div>
+        <div class="stat-sub" id="statLatestDate">--</div>
+      </div>
+    </div>
+
+    <!-- SEARCH & FILTERS BAR -->
+    <div class="controls-card">
+      <div class="search-box-full">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input type="text" id="searchInput" class="form-control" placeholder="Search for test name...">
+      </div>
+      <select class="filter-select" id="statusFilter">
+        <option value="">All Statuses</option>
+        <option value="Normal">Normal</option>
+        <option value="Abnormal">Abnormal</option>
+      </select>
+    </div>
+
+    <!-- RECENT RESULTS LIST -->
+    <div class="section-title">Recent Results</div>
+    <div id="resultsList">
+      <p class="text-center py-4 text-muted">Loading lab results...</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="page-footer">
+      <div class="mb-2">
+        <span>🛡️ HIPAA COMPLIANT</span> &nbsp;&bull;&nbsp; <span>🔐 SECURE CLINICAL ACCESS</span>
+      </div>
+      MediPortal Connect ensures your medical laboratory information is protected using industry-standard AES-256 encryption. Last security audit: Oct 2023.
+    </div>
+
+  </main>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/auth-redirect.js"></script>
+<script>
+  // Helper to format date from YYYY-MM-DD to "Oct 20, 2023"
+  function formatDate(dateStr) {
+    const date = new Date(dateStr + 'T00:00:00');
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  // Fetch current user info
+  fetch('/api/auth/me')
+    .then(res => {
+      if (res.status === 401) {
+        redirectToLogin();
+        return null;
+      }
+      return res.json();
+    })
+    .then(data => {
+      if (data && data.user) {
+        const fullName = data.user.full_name;
+        const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('navUserName').textContent = fullName;
+        document.getElementById('navPatientId').textContent = `Patient ID: ${data.user.patient_id}`;
+        document.getElementById('navUserInitials').textContent = initials;
+      }
+    })
+    .catch(() => {});
+
+  // Load lab results
+  let allResults = [];
+
+  function fetchLabResults() {
+    fetch('/api/lab-results')
+      .then(res => {
+        if (res.status === 401) {
+          redirectToLogin();
+          return null;
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (!data) return;
+        allResults = data.results || [];
+        updateStats(allResults);
+        renderResults(allResults);
+      })
+      .catch(err => {
+        console.error('Error loading lab results:', err);
+        document.getElementById('resultsList').innerHTML = '<p class="text-center py-4 text-danger">Error loading lab results.</p>';
+      });
+  }
+
+  function updateStats(results) {
+    const total = results.length;
+    const normal = results.filter(r => r.status === 'Normal').length;
+    const abnormal = results.filter(r => r.status === 'Abnormal').length;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statNormal').textContent = normal;
+    document.getElementById('statAbnormal').textContent = abnormal;
+
+    if (results.length > 0) {
+      const latest = results[0]; // results are ordered by date DESC from backend
+      document.getElementById('statLatestName').textContent = latest.test_name.split(' ')[0];
+      document.getElementById('statLatestDate').textContent = formatDate(latest.report_date);
+    } else {
+      document.getElementById('statLatestName').textContent = '--';
+      document.getElementById('statLatestDate').textContent = '--';
+    }
+  }
+
+  function renderResults(results) {
+    const listEl = document.getElementById('resultsList');
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value;
+
+    let filtered = results.filter(r => {
+      const matchesSearch = r.test_name.toLowerCase().includes(searchTerm);
+      const matchesStatus = !statusFilter || r.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = '<p class="text-center py-4 text-muted">No lab results found.</p>';
+      return;
+    }
+
+    listEl.innerHTML = filtered.map(r => {
+      const isNormal = r.status === 'Normal';
+      return `
+        <div class="lab-card ${isNormal ? 'lab-card-green' : 'lab-card-orange'}">
+          <div class="lab-info-side">
+            <div class="test-title-group">
+              <div class="test-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div>
+                <h4 class="test-name">${r.test_name}</h4>
+                <div class="test-meta-sub">${r.category} &nbsp;•&nbsp; ${r.report_id}</div>
+              </div>
+            </div>
+
+            <div class="meta-col">
+              <svg class="meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <div>
+                <div class="meta-label">REPORT DATE</div>
+                <div class="meta-val">${formatDate(r.report_date)}</div>
+              </div>
+            </div>
+
+            <div class="meta-col">
+              <svg class="meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <div>
+                <div class="meta-label">ORDERING PHYSICIAN</div>
+                <div class="meta-val">${r.physician}</div>
+              </div>
+            </div>
+
+            <div>
+              <span class="badge-status ${isNormal ? 'badge-normal' : 'badge-abnormal'}">${r.status.toUpperCase()}</span>
+            </div>
+          </div>
+
+          <div class="lab-action-side">
+            <a href="cbc-results.html?report=${r.report_id}" class="btn-view-details">View Details &rsaquo;</a>
+            <button class="btn-pdf">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              PDF
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Search and filter
+  document.getElementById('searchInput').addEventListener('input', () => renderResults(allResults));
+  document.getElementById('statusFilter').addEventListener('change', () => renderResults(allResults));
+
+  // Download all button
+  document.getElementById('downloadAllBtn').addEventListener('click', () => {
+    alert('PDF download feature is not available in this demo.');
+  });
+
+  // Initial load
+  fetchLabResults();
+</script>
+<script src="/js/logout.js"></script>
+<a href="faqs.html">FAQs</a>
+</body>
+</html>

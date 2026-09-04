@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile &amp; Settings — MediPortal</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --brand:#3D5AF1;
+    --brand-deep:#2E44C7;
+    --navy:#16326B;
+    --ink-soft:#5B6B85;
+    --ink-faint:#8895A9;
+    --success:#16A34A;
+    --line:#E7EAF2;
+  }
+  body{ font-family:'Inter',sans-serif; background:#fff; color:var(--navy); }
+  .navbar-brand{ font-weight:800; color:var(--navy) !important; }
+  .brand-mark{ width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,#3D5AF1,#1F2FA0); display:flex; align-items:center; justify-content:center; }
+  .top-nav{ background:#EEF2FB; border-bottom:1px solid #E1E7F5; }
+  .top-nav .nav-link{ color:#2A3B57; font-weight:500; font-size:14.5px; }
+  .top-nav .nav-link.active{ font-weight:600; }
+
+  .sidebar{ width:220px; min-height:calc(100vh - 61px); border-right:1px solid var(--line); display:flex; flex-direction:column; justify-content:space-between; padding:24px 16px; flex-shrink:0; }
+  .side-link{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:9px; color:#4A5568; font-weight:500; font-size:14px; text-decoration:none; margin-bottom:4px; }
+  .side-link:hover{ background:#F5F7FB; color:var(--navy); }
+  .side-link.active{ background:var(--brand); color:#fff; font-weight:600; }
+  .side-link.danger{ color:#DC3545; }
+  .side-link.danger:hover{ background:#FDEDEE; }
+  .side-divider{ border-top:1px solid var(--line); margin:14px 4px; }
+
+  .layout{ display:flex; }
+  main{ flex:1; padding:32px 36px; min-width:0; }
+
+  .form-label{ font-weight:600; font-size:13px; color:#2A3B57; }
+  .form-control{ border-color:#D8DEEA; font-size:14px; }
+  .form-control:focus{ border-color:var(--brand); box-shadow:0 0 0 3px rgba(61,90,241,0.15); }
+  .form-control:disabled{ background:#F5F7FB; color:var(--ink-faint); }
+  .field-hint{ font-size:11px; color:var(--ink-faint); margin-top:4px; }
+
+  .settings-card{ border:1px solid var(--line); border-radius:12px; padding:24px; }
+  .settings-card h2{ font-size:17px; font-weight:700; color:var(--navy); margin-bottom:2px; }
+  .settings-card .card-sub{ font-size:13px; color:var(--ink-faint); margin-bottom:20px; }
+
+  .btn-brand{ background:var(--brand); border-color:var(--brand); color:#fff; font-weight:600; font-size:13.5px; }
+  .btn-brand:hover{ background:var(--brand-deep); border-color:var(--brand-deep); color:#fff; }
+  .btn-outline-brand{ border-color:var(--brand); color:var(--brand); font-weight:600; font-size:13.5px; }
+  .btn-outline-brand:hover{ background:var(--brand); color:#fff; }
+
+  .avatar-wrap{ position:relative; width:96px; height:96px; margin:0 auto 16px; }
+  .avatar-wrap .avatar-initials{ width:96px; height:96px; border-radius:50%; background:var(--brand); color:#fff; display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:800; }
+  .avatar-cam{ position:absolute; bottom:0; right:0; width:28px; height:28px; border-radius:50%; background:var(--brand); border:2px solid #fff; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+
+  .verified-badge{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .verified-icon{ width:32px; height:32px; border-radius:50%; background:#E3F6E9; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+  .toggle-row{ display:flex; align-items:flex-start; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); gap:14px; }
+  .toggle-row:last-of-type{ border-bottom:none; }
+  .toggle-icon{ width:32px; height:32px; border-radius:8px; background:#EEF2FB; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .toggle-title{ font-weight:600; font-size:13.5px; color:var(--navy); }
+  .toggle-desc{ font-size:12px; color:var(--ink-faint); margin-top:2px; }
+  .form-switch .form-check-input{ width:2.4em; height:1.3em; cursor:pointer; }
+  .form-switch .form-check-input:checked{ background-color:var(--success); border-color:var(--success); }
+
+  .trust-badges{ display:flex; justify-content:center; gap:18px; font-size:11px; letter-spacing:0.04em; color:#9AA6BB; font-weight:600; text-transform:uppercase; margin-bottom:10px; }
+  .trust-badges span{ display:flex; align-items:center; gap:5px; }
+  .security-note{ text-align:center; font-size:11.5px; color:var(--ink-faint); max-width:520px; margin:0 auto; }
+
+  footer{ border-top:1px solid var(--line); padding:18px 36px; font-size:12.5px; color:var(--ink-faint); }
+  footer a{ color:var(--ink-faint); text-decoration:none; margin-left:20px; }
+
+  @media (max-width:900px){
+    .sidebar{ display:none; }
+    main{ padding:24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar top-nav py-2">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="mediportal-dashboard.html">
+      <span class="brand-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg>
+      </span>
+      MediPortal
+    </a>
+    <ul class="navbar-nav flex-row gap-4 mx-auto">
+      <li class="nav-item"><a class="nav-link" href="mediportal-dashboard.html">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="mediportal-appointments-list.html">Appointments</a></li>
+      <li class="nav-item"><a class="nav-link" href="lab-results.html">Records</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Messages</a></li>
+    </ul>
+    <div class="d-flex align-items-center gap-3">
+      <div class="input-group input-group-sm d-none d-md-flex" style="width:220px;">
+        <span class="input-group-text bg-white border-end-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA6BB" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        </span>
+        <input type="text" class="form-control border-start-0" placeholder="Search records...">
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <div id="navUserInitials" class="rounded-circle d-flex align-items-center justify-content-center"
+             style="width:32px; height:32px; background:var(--brand); color:#fff; font-weight:700; font-size:12px;">
+          SJ
+        </div>
+        <div class="d-none d-sm-block" style="line-height:1.2;">
+          <div class="fw-semibold" id="navUserName" style="font-size:13px;">Loading...</div>
+          <div class="text-secondary" id="navPatientId" style="font-size:11px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div>
+      <a href="mediportal-dashboard.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="mediportal-appointments-list.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+        Appointments
+      </a>
+      <a href="lab-results.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2h6l1 4H8l1-4z"/><path d="M8 6l-3 14a2 2 0 002 2h10a2 2 0 002-2L16 6"/></svg>
+        Lab Results
+      </a>
+      <a href="#" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>
+        Messages
+      </a>
+      <a href="#" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        Health Profile
+      </a>
+    </div>
+    <div>
+      <div class="side-divider"></div>
+      <a href="mediportal-settings.html" class="side-link active">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+        Settings
+      </a>
+      <a href="mediportal-signin.html" class="side-link danger">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <h1 class="h3 fw-bold mb-1">Profile &amp; Settings</h1>
+    <p class="text-secondary mb-4" style="font-size:14.5px;">Manage your personal information, security preferences, and notification settings.</p>
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="settings-card text-center mb-3">
+          <div class="avatar-wrap">
+            <div class="avatar-initials" id="profileAvatar">SJ</div>
+            <div class="avatar-cam">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+          </div>
+          <h3 class="h6 fw-bold mb-0" id="profileName">Loading...</h3>
+          <div class="text-secondary mb-3" style="font-size:11.5px; letter-spacing:0.04em;" id="profilePatientId">PATIENT ID: --</div>
+          <button class="btn btn-brand w-100 mb-2" onclick="alert('Upload feature coming soon')">Upload New Photo</button>
+          <div class="field-hint">JPG, GIF or PNG. Max size of 800K</div>
+        </div>
+
+        <div class="settings-card mb-3">
+          <div class="verified-badge">
+            <div class="verified-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+            </div>
+            <div>
+              <div class="fw-bold" style="font-size:13.5px;">Verified Profile</div>
+              <div style="font-size:11.5px; color:var(--ink-faint);">Identity confirmed via ID.me</div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between mb-1" style="font-size:11px; font-weight:600; color:var(--ink-faint);">
+            <span>PROFILE COMPLETION</span><span style="color:var(--navy);">85%</span>
+          </div>
+          <div class="progress" style="height:5px;"><div class="progress-bar" style="width:85%; background:var(--brand);"></div></div>
+        </div>
+
+        <button class="btn btn-outline-danger w-100" id="logoutBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+          Logout Session
+        </button>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="settings-card mb-3">
+          <h2>Personal Information</h2>
+          <p class="card-sub">Update your basic profile details here.</p>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="editFullName">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="editEmail" disabled>
+              <div class="field-hint">Email changes require support verification.</div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="editPhone">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Date of Birth</label>
+              <input type="text" class="form-control" id="editDob">
+            </div>
+          </div>
+          <button class="btn btn-brand mt-3" id="updateProfileBtn">Update Profile</button>
+        </div>
+
+        <div class="settings-card mb-3">
+          <h2>Change Password</h2>
+          <p class="card-sub">Ensure your account is using a strong, unique password.</p>
+          <div class="mb-3">
+            <label class="form-label">Current Password</label>
+            <input type="password" id="currentPw" class="form-control" placeholder="Enter current password">
+          </div>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label">New Password</label>
+              <input type="password" id="newPw" class="form-control" placeholder="Min. 8 characters">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Confirm New Password</label>
+              <input type="password" id="confirmPw" class="form-control" placeholder="Repeat new password">
+            </div>
+          </div>
+          <button class="btn btn-outline-brand mt-3" id="updatePasswordBtn">Update Password</button>
+        </div>
+
+        <div class="settings-card">
+          <h2>Notification Preferences</h2>
+          <p class="card-sub">Decide how you'd like to stay informed about your health.</p>
+
+          <div class="toggle-row">
+            <div class="d-flex gap-3">
+              <div class="toggle-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3D5AF1" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg></div>
+              <div>
+                <div class="toggle-title">Email Notifications</div>
+                <div class="toggle-desc">Receive lab results and billing statements via your registered email address.</div>
+              </div>
+            </div>
+            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="emailNotifications"></div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="d-flex gap-3">
+              <div class="toggle-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3D5AF1" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+              <div>
+                <div class="toggle-title">SMS Alerts</div>
+                <div class="toggle-desc">Get quick text message reminders for upcoming appointments (Recommended).</div>
+              </div>
+            </div>
+            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="smsNotifications"></div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="d-flex gap-3">
+              <div class="toggle-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3D5AF1" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></div>
+              <div>
+                <div class="toggle-title">Appointment Reminders</div>
+                <div class="toggle-desc">Allow the system to notify you 24 hours before any scheduled consultation.</div>
+              </div>
+            </div>
+            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="appointmentReminders"></div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="d-flex gap-3">
+              <div class="toggle-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3D5AF1" stroke-width="2"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg></div>
+              <div>
+                <div class="toggle-title">Lab Results Ready</div>
+                <div class="toggle-desc">Instant push notification when new laboratory results are uploaded.</div>
+              </div>
+            </div>
+            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="labResultsNotifications"></div>
+          </div>
+
+          <button class="btn btn-brand mt-3" id="savePreferencesBtn">Save Preferences</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4 pt-3">
+      <div class="trust-badges">
+        <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA6BB" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg> HIPAA Compliant</span>
+        <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA6BB" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg> Secure Clinical Data</span>
+      </div>
+      <p class="security-note">MediPortal Connect employs end-to-end encryption for all patient data. Accessing your settings via public networks is not recommended. Last security audit: Oct 2023.</p>
+    </div>
+  </main>
+</div>
+
+<footer class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <span>© 2026 MediPortal Connect. All rights reserved.</span>
+  <div>
+    <a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Help Center</a>
+<a href="faqs.html">FAQs</a>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/auth-redirect.js"></script>
+<script>
+  function handleUnauthorized(res) {
+    if (res.status === 401) {
+      redirectToLogin();
+      return true;
+    }
+    return false;
+  }
+
+  function showAlert(message, type = 'success') {
+    alert(message);
+  }
+
+  // Load user info
+  fetch('/api/auth/me')
+    .then(res => {
+      if (handleUnauthorized(res)) return null;
+      return res.json();
+    })
+    .then(data => {
+      if (data && data.user) {
+        const user = data.user;
+        const initials = user.full_name.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('navUserName').textContent = user.full_name;
+        document.getElementById('navPatientId').textContent = `Patient ID: ${user.patient_id}`;
+        document.getElementById('navUserInitials').textContent = initials;
+        document.getElementById('profileAvatar').textContent = initials;
+        document.getElementById('profileName').textContent = user.full_name;
+        document.getElementById('profilePatientId').textContent = `PATIENT ID: ${user.patient_id}`;
+
+        document.getElementById('editFullName').value = user.full_name;
+        document.getElementById('editEmail').value = user.email;
+        document.getElementById('editPhone').value = user.phone || '';
+        document.getElementById('editDob').value = user.dob || '';
+      }
+    })
+    .catch(() => {});
+
+  // Load settings
+  fetch('/api/settings')
+    .then(res => {
+      if (handleUnauthorized(res)) return null;
+      return res.json();
+    })
+    .then(data => {
+      if (data && data.settings) {
+        const s = data.settings;
+        document.getElementById('emailNotifications').checked = !!s.email_notifications;
+        document.getElementById('smsNotifications').checked = !!s.sms_notifications;
+        document.getElementById('appointmentReminders').checked = !!s.appointment_reminders;
+        document.getElementById('labResultsNotifications').checked = !!s.lab_results_notifications;
+      }
+    })
+    .catch(() => {});
+
+  // Update profile
+  document.getElementById('updateProfileBtn').addEventListener('click', async () => {
+    const full_name = document.getElementById('editFullName').value.trim();
+    const phone = document.getElementById('editPhone').value.trim();
+    const dob = document.getElementById('editDob').value.trim();
+
+    const res = await fetch('/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ full_name, phone, dob })
+    });
+    if (handleUnauthorized(res)) return;
+    const data = await res.json();
+    if (res.ok) {
+      showAlert('Profile updated successfully!');
+      const initials = full_name.split(' ').map(n => n[0]).join('').toUpperCase();
+      document.getElementById('navUserName').textContent = full_name;
+      document.getElementById('navUserInitials').textContent = initials;
+      document.getElementById('profileAvatar').textContent = initials;
+      document.getElementById('profileName').textContent = full_name;
+    } else {
+      showAlert(data.error || 'Could not update profile.', 'error');
+    }
+  });
+
+  // Update password
+  document.getElementById('updatePasswordBtn').addEventListener('click', async () => {
+    const current_password = document.getElementById('currentPw').value;
+    const new_password = document.getElementById('newPw').value;
+    const confirm = document.getElementById('confirmPw').value;
+
+    if (!current_password || !new_password) {
+      showAlert('Please fill in all password fields.', 'error');
+      return;
+    }
+    if (new_password !== confirm) {
+      showAlert('New passwords do not match.', 'error');
+      return;
+    }
+    if (new_password.length < 8) {
+      showAlert('Password must be at least 8 characters.', 'error');
+      return;
+    }
+
+    const res = await fetch('/api/auth/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ current_password, new_password })
+    });
+    if (handleUnauthorized(res)) return;
+    const data = await res.json();
+    if (res.ok) {
+      showAlert('Password changed successfully!');
+      document.getElementById('currentPw').value = '';
+      document.getElementById('newPw').value = '';
+      document.getElementById('confirmPw').value = '';
+    } else {
+      showAlert(data.error || 'Could not change password.', 'error');
+    }
+  });
+
+  // Save preferences
+  document.getElementById('savePreferencesBtn').addEventListener('click', async () => {
+    const payload = {
+      email_notifications: document.getElementById('emailNotifications').checked ? 1 : 0,
+      sms_notifications: document.getElementById('smsNotifications').checked ? 1 : 0,
+      appointment_reminders: document.getElementById('appointmentReminders').checked ? 1 : 0,
+      lab_results_notifications: document.getElementById('labResultsNotifications').checked ? 1 : 0
+    };
+
+    const res = await fetch('/api/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (handleUnauthorized(res)) return;
+    const data = await res.json();
+    if (res.ok) {
+      showAlert('Preferences saved!');
+    } else {
+      showAlert(data.error || 'Could not save preferences.', 'error');
+    }
+  });
+
+  // Logout
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    window.location.href = 'mediportal-signin.html';
+  });
+</script>
+<script src="/js/logout.js"></script>
+</body>
+</html>

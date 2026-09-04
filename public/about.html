@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us — MediPortal</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --navy-dark: #0F172A;
+    --navy-deep: #1E293B;
+    --brand-blue: #2563EB;
+    --brand-soft: #EFF6FF;
+    --text-main: #334155;
+    --text-muted: #64748B;
+    --line: #E2E8F0;
+    --bg-light: #F8FAFC;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    background-color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Simple Public Nav */
+  .public-nav {
+    background: #EEF2FB;
+    border-bottom: 1px solid #E1E7F5;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    color: var(--navy-dark);
+    text-decoration: none;
+  }
+  .brand-mark {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    background: linear-gradient(135deg,#3D5AF1,#1F2FA0);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: #2A3B57;
+    font-weight: 600;
+    font-size: 14px;
+    margin-left: 20px;
+  }
+  .nav-links a:hover { color: #2563EB; }
+
+  /* Hero Section */
+  .hero-section {
+    background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), 
+                url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+  }
+
+  .hero-section h1 {
+    font-weight: 800;
+    font-size: 38px;
+    margin-bottom: 12px;
+  }
+
+  .hero-section p {
+    color: #94A3B8;
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+
+  /* Section Padding */
+  .section-padding {
+    padding: 70px 0;
+  }
+
+  .bg-light-section {
+    background-color: var(--bg-light);
+  }
+
+  /* Mission / Vision Cards */
+  .info-card {
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  .info-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--navy-dark);
+    font-size: 17px;
+    margin-bottom: 10px;
+  }
+
+  .info-card-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--brand-soft);
+    color: var(--brand-blue);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .doctor-img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    height: 100%;
+    max-height: 480px;
+  }
+
+  /* Core Values */
+  .value-card {
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 32px 20px;
+    text-align: center;
+    height: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  .value-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--brand-soft);
+    color: var(--brand-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+  }
+
+  /* History Timeline */
+  .timeline-item {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 24px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--brand-blue);
+  }
+
+  .timeline-year {
+    display: inline-block;
+    background: var(--brand-soft);
+    color: var(--brand-blue);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-bottom: 4px;
+  }
+
+  /* Department List */
+  .dept-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .dept-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #FFFFFF;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .team-thumb-group {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    height: 140px;
+    margin-top: 16px;
+  }
+
+  /* Accreditations & Contact Cards */
+  .footer-card {
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    height: 100%;
+  }
+
+  .accred-logo {
+    width: 60px;
+    height: 60px;
+    background: #EFF6FF;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--brand-blue);
+    text-align: center;
+  }
+
+  /* Main Footer */
+  footer {
+    background-color: var(--navy-dark);
+    color: #94A3B8;
+    padding: 60px 0 30px 0;
+    font-size: 13px;
+  }
+
+  footer h6 {
+    color: #FFFFFF;
+    font-weight: 700;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  footer a {
+    color: #94A3B8;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  footer a:hover {
+    color: #FFFFFF;
+  }
+</style>
+</head>
+<body>
+
+  <!-- PUBLIC NAV -->
+  <nav class="public-nav">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg>
+      </span>
+      MediPortal
+    </a>
+    <div class="nav-links">
+      <a href="mediportal-signin.html">Sign In</a>
+      <a href="mediportal-signup.html">Create Account</a>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="container">
+      <h1>Leading the Way in Medical Excellence</h1>
+      <p>Providing compassionate healthcare since 1990</p>
+    </div>
+  </section>
+
+  <!-- COMMITMENT TO CARE SECTION -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-6">
+          <h2 class="fw-bold mb-3" style="color: var(--navy-dark);">Our Commitment to Care</h2>
+          <p class="text-muted mb-4" style="font-size: 14.5px; line-height: 1.6;">
+            For over three decades, MediPortal has been at the forefront of medical innovation, combining cutting-edge technology with a human-centric approach to healing.
+          </p>
+
+          <!-- Our Mission -->
+          <div class="info-card">
+            <div class="info-card-title">
+              <span class="info-card-icon">🎯</span>
+              Our Mission
+            </div>
+            <p class="text-muted mb-0" style="font-size: 13.5px; line-height: 1.5;">
+              To provide exceptional clinical care and promote wellness through a compassionate, patient-centered environment that respects the dignity of every individual we serve.
+            </p>
+          </div>
+
+          <!-- Our Vision -->
+          <div class="info-card">
+            <div class="info-card-title">
+              <span class="info-card-icon">👁️</span>
+              Our Vision
+            </div>
+            <p class="text-muted mb-0" style="font-size: 13.5px; line-height: 1.5;">
+              To be the preferred choice for healthcare services in our region, recognized for superior quality, physician leadership, and an unwavering focus on patient safety.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <img src="https://images.unsplash.com/photo-1594824813566-888242e85a05?auto=format&fit=crop&w=800&q=80" alt="Female Doctor" class="doctor-img">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE VALUES SECTION -->
+  <section class="section-padding bg-light-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="fw-bold" style="color: var(--navy-dark);">Our Core Values</h2>
+        <div style="width: 40px; height: 3px; background: var(--brand-blue); margin: 12px auto 0 auto; border-radius: 2px;"></div>
+      </div>
+
+      <div class="row g-4">
+        <!-- Compassion -->
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card">
+            <div class="value-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            </div>
+            <h6 class="fw-bold mb-2">Compassion</h6>
+            <p class="text-muted mb-0" style="font-size: 12.5px; line-height: 1.5;">
+              We treat every patient with the kindness, empathy, and respect they deserve.
+            </p>
+          </div>
+        </div>
+
+        <!-- Excellence -->
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card">
+            <div class="value-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15l-2 5 9-11h-8l2-5-9 11h8z"/></svg>
+            </div>
+            <h6 class="fw-bold mb-2">Excellence</h6>
+            <p class="text-muted mb-0" style="font-size: 12.5px; line-height: 1.5;">
+              We strive for the highest clinical standards and continuous quality improvement.
+            </p>
+          </div>
+        </div>
+
+        <!-- Integrity -->
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card">
+            <div class="value-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h6 class="fw-bold mb-2">Integrity</h6>
+            <p class="text-muted mb-0" style="font-size: 12.5px; line-height: 1.5;">
+              We operate with honesty, transparency, and the highest ethical standards.
+            </p>
+          </div>
+        </div>
+
+        <!-- Innovation -->
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card">
+            <div class="value-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
+            <h6 class="fw-bold mb-2">Innovation</h6>
+            <p class="text-muted mb-0" style="font-size: 12.5px; line-height: 1.5;">
+              We embrace new technologies and methodologies to advance patient outcomes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORY & DEPARTMENTS SECTION -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="row g-5">
+        
+        <!-- Hospital History -->
+        <div class="col-lg-6">
+          <h4 class="fw-bold mb-1" style="color: var(--navy-dark);">Hospital History</h4>
+          <p class="text-muted mb-4" style="font-size: 13.5px;">A legacy of healing and innovation in the heart of the city.</p>
+
+          <div class="timeline-item">
+            <span class="timeline-year">1990</span>
+            <h6 class="fw-bold mb-1" style="font-size: 14px;">The Beginning</h6>
+            <p class="text-muted mb-0" style="font-size: 12.5px;">MediPortal opened its doors with a 50-bed capacity and 15 specialized physicians.</p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="timeline-year">2005</span>
+            <h6 class="fw-bold mb-1" style="font-size: 14px;">Major Expansion</h6>
+            <p class="text-muted mb-0" style="font-size: 12.5px;">Completed the North Wing, adding advanced surgical suites and a dedicated pediatric unit.</p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="timeline-year">2015</span>
+            <h6 class="fw-bold mb-1" style="font-size: 14px;">Digital Transformation</h6>
+            <p class="text-muted mb-0" style="font-size: 12.5px;">Became one of the first hospitals to implement a fully integrated electronic patient portal.</p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="timeline-year">2023</span>
+            <h6 class="fw-bold mb-1" style="font-size: 14px;">Innovation Center</h6>
+            <p class="text-muted mb-0" style="font-size: 12.5px;">Inaugurated the State-of-the-Art Robotic Surgery and Cardiac Research Center.</p>
+          </div>
+        </div>
+
+        <!-- Our Departments -->
+        <div class="col-lg-6">
+          <h4 class="fw-bold mb-1" style="color: var(--navy-dark);">Our Departments</h4>
+          <p class="text-muted mb-4" style="font-size: 13.5px;">Specialized care across all major medical disciplines.</p>
+
+          <ul class="dept-list">
+            <li class="dept-item">
+              <span>🩺 Cardiology</span>
+              <span class="text-muted">&rsaquo;</span>
+            </li>
+            <li class="dept-item">
+              <span>🧪 Dermatology</span>
+              <span class="text-muted">&rsaquo;</span>
+            </li>
+            <li class="dept-item">
+              <span>🧠 Neurology</span>
+              <span class="text-muted">&rsaquo;</span>
+            </li>
+            <li class="dept-item">
+              <span>👶 Pediatrics</span>
+              <span class="text-muted">&rsaquo;</span>
+            </li>
+            <li class="dept-item">
+              <span>🦴 Orthopedics</span>
+              <span class="text-muted">&rsaquo;</span>
+            </li>
+            <li class="dept-item">
+              <span>🔬 Gynecology</span>
+              <span class="text-muted">&rsaquo;</span>
+            </li>
+            <li class="dept-item">
+              <span>👁️ Ophthalmology</span>
+              <span class="text-muted">&rsaquo;</span>
+            </li>
+          </ul>
+
+          <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80" alt="Medical Team" class="team-thumb-group">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCREDITATIONS & CONTACT CARDS -->
+  <section class="section-padding bg-light-section">
+    <div class="container">
+      <div class="row g-4">
+        
+        <!-- Accreditations -->
+        <div class="col-lg-6">
+          <div class="footer-card">
+            <h5 class="fw-bold mb-1" style="color: var(--navy-dark);">Accreditations</h5>
+            <p class="text-muted mb-4" style="font-size: 13px;">Our commitment to quality is verified by leading global healthcare institutions.</p>
+
+            <div class="d-flex align-items-center gap-3">
+              <div class="accred-logo">JCI Accredited</div>
+              <ul class="list-unstyled mb-0 text-muted" style="font-size: 12.5px; line-height: 1.8;">
+                <li>• Joint Commission International (JCI)</li>
+                <li>• ISO 9001:2015 Quality Management</li>
+                <li>• HIMSS Stage 7 Certification</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="col-lg-6">
+          <div class="footer-card">
+            <h5 class="fw-bold mb-1" style="color: var(--navy-dark);">Contact Information</h5>
+            <p class="text-muted mb-4" style="font-size: 13px;">Reach out to us for any inquiries or to schedule a visit.</p>
+
+            <div class="d-flex flex-column gap-2 text-muted" style="font-size: 12.5px;">
+              <div>📍 <strong>ADDRESS:</strong> 123 Medical Center Drive, Metropolis, ST 12345</div>
+              <div>📞 <strong>PHONE:</strong> +1 (555) 123-4567</div>
+              <div>✉️ <strong>EMAIL:</strong> support@mediportal.care</div>
+              <div>🌐 <strong>WEBSITE:</strong> www.mediportal.care</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-md-3">
+          <h6>Contact Us</h6>
+          <p class="mb-1" style="font-size: 12px;">123 Medical Center Drive, Suite 100<br>Metropolis, ST 12345</p>
+          <p class="mb-1" style="font-size: 12px;">+1 (555) 123-4567</p>
+          <p class="mb-0" style="font-size: 12px;">support@mediportal.care</p>
+        </div>
+
+        <div class="col-md-3">
+          <h6>Emergency Services</h6>
+          <p class="mb-1" style="font-size: 12px;">Emergency Hotline</p>
+          <p class="fw-bold text-white mb-2" style="font-size: 14px;">911</p>
+          <p class="mb-0" style="font-size: 11px;">Available 24/7, 365 Days</p>
+        </div>
+
+        <div class="col-md-3">
+          <h6>Quick Links</h6>
+          <a href="mediportal-signin.html">Patient Portal Login</a>
+          <a href="mediportal-appointment.html">Find a Doctor</a>
+          <a href="lab-results.html">Medical Records Request</a>
+          <a href="#">Billing &amp; Insurance</a>
+          <a href="#">Careers</a>
+        </div>
+
+        <div class="col-md-3">
+          <h6>Resources</h6>
+          <a href="privacy-policy.html">Privacy Policy</a>
+<a href="faqs.html">FAQs</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+          <a href="#">Accessibility Statement</a>
+          <span class="d-block mt-2 text-muted" style="font-size: 11px;">🛡️ JCAHO Accredited</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

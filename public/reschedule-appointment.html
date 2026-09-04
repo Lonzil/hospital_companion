@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reschedule Appointment — MediPortal</title>
+
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --brand: #3D5AF1;
+    --brand-hover: #2E44C7;
+    --navy: #16326B;
+    --ink-soft: #5B6B85;
+    --ink-faint: #8895A9;
+    --line: #E7EAF2;
+    --bg-light: #F5F7FB;
+    --badge-blue-bg: #EEF2FB;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--navy);
+  }
+
+  /* --- Top Nav --- */
+  .top-nav {
+    background: #EEF2FB;
+    border-bottom: 1px solid #E1E7F5;
+  }
+  .navbar-brand { font-weight: 800; color: var(--navy) !important; }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: linear-gradient(135deg, #3D5AF1, #1F2FA0);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .top-nav .nav-link { color: #2A3B57; font-weight: 500; font-size: 14.5px; }
+  .top-nav .nav-link.active { font-weight: 600; }
+
+  /* --- Main Container --- */
+  .main-wrapper {
+    max-width: 1040px;
+    margin: 30px auto 60px;
+    padding: 0 20px;
+  }
+
+  /* Back Link & Header */
+  .back-link {
+    color: var(--brand);
+    font-weight: 600;
+    font-size: 13.5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .page-header h1 {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 6px 0;
+  }
+  .page-header p {
+    font-size: 13.5px;
+    color: var(--ink-faint);
+    margin-bottom: 24px;
+  }
+
+  /* --- Cards --- */
+  .content-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  /* --- Current Appointment Card --- */
+  .current-appt-box {
+    background: #FAFCFF;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .doc-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: var(--brand);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .doc-name { font-size: 14px; font-weight: 800; margin: 0; }
+  .doc-tag {
+    display: inline-block;
+    background: #EEF2FB;
+    color: var(--brand);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .label-faint {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-faint);
+  }
+  .value-bold {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* --- Date Input --- */
+  .date-input {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    width: 100%;
+  }
+  .date-input:focus {
+    outline: none;
+    border-color: var(--brand);
+  }
+
+  /* --- Time Slots --- */
+  .slots-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 24px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .time-slot-btn {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--navy);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .time-slot-btn:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+  }
+  .time-slot-btn.selected {
+    background: var(--brand);
+    color: #fff;
+    border-color: var(--brand);
+  }
+
+  /* --- Reason Textarea --- */
+  .reason-textarea {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 13px;
+    padding: 12px;
+    width: 100%;
+    resize: none;
+    min-height: 90px;
+  }
+  .reason-textarea:focus {
+    outline: none;
+    border-color: var(--brand);
+  }
+  .reason-note {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* --- Summary Sidebar --- */
+  .summary-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+  .summary-title {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+  .summary-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .summary-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #EEF2FB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--brand);
+  }
+  .summary-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-faint);
+  }
+  .summary-value {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .btn-confirm {
+    background: var(--brand);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    transition: background 0.2s ease;
+  }
+  .btn-confirm:hover { background: var(--brand-hover); color: #fff; }
+
+  .btn-cancel {
+    background: #EEF2FB;
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    text-decoration: none;
+    display: block;
+  }
+  .btn-cancel:hover { background: #E1E8FA; color: var(--navy); }
+
+  .terms-text {
+    font-size: 10px;
+    color: var(--ink-faint);
+    text-align: center;
+    margin-top: 20px;
+    line-height: 1.4;
+  }
+
+  .security-widget {
+    text-align: center;
+    padding: 10px;
+  }
+  .security-text {
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: #A0AEC0;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* Footer */
+  .bottom-footer {
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+  .bottom-footer a {
+    color: var(--ink-faint);
+    text-decoration: none;
+    font-weight: 700;
+    margin: 0 10px;
+  }
+
+  @media (max-width: 768px) {
+    .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="navbar top-nav py-2">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="mediportal-dashboard.html">
+      <span class="brand-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg>
+      </span>
+      MediPortal
+    </a>
+    <ul class="navbar-nav flex-row gap-4 mx-auto">
+      <li class="nav-item"><a class="nav-link" href="mediportal-dashboard.html">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link active" href="mediportal-appointments-list.html">Appointments</a></li>
+      <li class="nav-item"><a class="nav-link" href="lab-results.html">Records</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Messages</a></li>
+    </ul>
+    <div class="d-flex align-items-center gap-3">
+      <div class="input-group input-group-sm d-none d-md-flex" style="width:220px;">
+        <span class="input-group-text bg-white border-end-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA6BB" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        </span>
+        <input type="text" class="form-control border-start-0" placeholder="Search records...">
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <div id="navUserInitials" class="rounded-circle d-flex align-items-center justify-content-center"
+             style="width:32px; height:32px; background:var(--brand); color:#fff; font-weight:700; font-size:12px;">
+          SJ
+        </div>
+        <div class="d-none d-sm-block" style="line-height:1.2;">
+          <div class="fw-semibold" id="navUserName" style="font-size:13px;">Loading...</div>
+          <div class="text-secondary" id="navPatientId" style="font-size:11px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN WRAPPER -->
+<div class="main-wrapper">
+  
+  <!-- Back Link -->
+  <a href="mediportal-appointments-list.html" class="back-link" id="backLink">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+    Back to Appointment Details
+  </a>
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Reschedule Appointment</h1>
+    <p>Please select a new date and time for your visit. Your previous slot will be released upon confirmation.</p>
+  </div>
+
+  <div class="row g-4">
+    
+    <!-- LEFT MAIN COLUMN -->
+    <div class="col-lg-8">
+      
+      <!-- Current Appointment Card -->
+      <div class="content-card">
+        <div class="section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3D5AF1" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Current Appointment
+        </div>
+
+        <div class="current-appt-box">
+          <div class="d-flex align-items-center gap-3">
+            <div class="doc-thumb" id="currentDocInitials">DR</div>
+            <div>
+              <div class="label-faint">DOCTOR</div>
+              <h4 class="doc-name" id="currentDocName">Loading...</h4>
+              <span class="doc-tag" id="currentDocSpecialty"></span>
+            </div>
+          </div>
+          <div>
+            <div class="label-faint">SCHEDULED FOR</div>
+            <div class="value-bold" id="currentDate">--</div>
+            <div class="value-bold" id="currentTime">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Select New Date & Time Card -->
+      <div class="content-card">
+        <div class="section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3D5AF1" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Select New Date & Time
+        </div>
+
+        <!-- Date Input (replacing static calendar) -->
+        <label class="form-label" for="newDate">New Date</label>
+        <input type="date" id="newDate" class="date-input mb-3" min="">
+
+        <!-- Time Slots -->
+        <div class="slots-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3D5AF1" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Available Time Slots
+        </div>
+
+        <div class="time-slots-grid" id="timeSlots">
+          <div class="time-slot-btn">09:00 AM</div>
+          <div class="time-slot-btn">09:30 AM</div>
+          <div class="time-slot-btn">10:00 AM</div>
+          <div class="time-slot-btn">10:30 AM</div>
+          <div class="time-slot-btn">11:00 AM</div>
+          <div class="time-slot-btn">01:30 PM</div>
+          <div class="time-slot-btn">02:00 PM</div>
+          <div class="time-slot-btn">02:30 PM</div>
+          <div class="time-slot-btn">03:00 PM</div>
+          <div class="time-slot-btn">04:30 PM</div>
+        </div>
+      </div>
+
+      <!-- Reason for Rescheduling Card -->
+      <div class="content-card">
+        <div class="section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3D5AF1" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Reason for Rescheduling
+        </div>
+
+        <div class="fw-bold mb-2" style="font-size: 12px; color: var(--navy);">Brief Explanation (Optional)</div>
+        <textarea class="reason-textarea" id="reasonInput" placeholder="Please let us know why you need to reschedule (e.g., work conflict, illness, etc.)"></textarea>
+        
+        <div class="reason-note">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8895A9" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Providing a reason helps our clinical team better prepare for your visit.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR COLUMN -->
+    <div class="col-lg-4">
+      
+      <!-- Summary Card -->
+      <div class="summary-card">
+        <div class="summary-title">Summary</div>
+
+        <!-- Specialist -->
+        <div class="summary-item">
+          <div class="summary-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <div class="summary-label">SPECIALIST</div>
+            <div class="summary-value" id="summaryDoctor">--</div>
+          </div>
+        </div>
+
+        <!-- New Date -->
+        <div class="summary-item">
+          <div class="summary-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <div class="summary-label">NEW DATE</div>
+            <div class="summary-value" id="selected-date-summary">--</div>
+          </div>
+        </div>
+
+        <!-- New Time -->
+        <div class="summary-item">
+          <div class="summary-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="summary-label">NEW TIME</div>
+            <div class="summary-value" id="selected-time-summary">--</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <button class="btn-confirm" id="confirmBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Confirm Reschedule
+        </button>
+
+        <a href="mediportal-appointments-list.html" class="btn-cancel" id="cancelLink">Cancel</a>
+
+        <div class="terms-text">
+          <strong>TERMS OF SERVICE</strong><br>
+          By confirming, you agree to our cancellation policy. Changes within 24 hours may incur a small administrative fee.
+        </div>
+      </div>
+
+      <!-- Security Stamp -->
+      <div class="security-widget">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B0BAC9" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        <div class="security-text">SECURE MEDICAL ENCRYPTION ACTIVE</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="bottom-footer">
+    MediPortal Connect ensures your medical information is protected using industry-standard AES-256 encryption. Rescheduling is logged for clinical quality assurance.
+    <div class="mt-2">
+      <a href="#">PRIVACY POLICY</a>
+      <a href="#">TERMS OF SERVICE</a>
+      <a href="#">SUPPORT CENTER</a>
+<a href="faqs.html">FAQs</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/auth-redirect.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get appointment ID from query string
+    const params = new URLSearchParams(window.location.search);
+    const appointmentId = params.get('id');
+
+    if (!appointmentId) {
+      alert('No appointment specified.');
+      window.location.href = 'mediportal-appointments-list.html';
+      return;
+    }
+
+    // Elements
+    const backLink = document.getElementById('backLink');
+    const cancelLink = document.getElementById('cancelLink');
+    const summaryDoctor = document.getElementById('summaryDoctor');
+    const selectedDateSummary = document.getElementById('selected-date-summary');
+    const selectedTimeSummary = document.getElementById('selected-time-summary');
+    const newDateInput = document.getElementById('newDate');
+    const confirmBtn = document.getElementById('confirmBtn');
+
+    let selectedDate = '';
+    let selectedTime = '';
+
+    // Set min date to today
+    const today = new Date().toISOString().split('T')[0];
+    newDateInput.min = today;
+
+    // Set links to include appointment ID
+    backLink.href = `appointment-details.html?id=${appointmentId}`;
+    cancelLink.href = `appointment-details.html?id=${appointmentId}`;
+
+    // Time slot selection
+    const timeSlots = document.querySelectorAll('.time-slot-btn');
+    timeSlots.forEach(slot => {
+      slot.addEventListener('click', () => {
+        timeSlots.forEach(s => s.classList.remove('selected'));
+        slot.classList.add('selected');
+        selectedTime = slot.textContent.trim();
+        selectedTimeSummary.textContent = selectedTime;
+      });
+    });
+
+    // Date selection
+    newDateInput.addEventListener('change', function() {
+      selectedDate = this.value;
+      if (selectedDate) {
+        const formatted = new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        selectedDateSummary.textContent = formatted;
+      } else {
+        selectedDateSummary.textContent = '--';
+      }
+    });
+
+    // Fetch appointment and user data
+    function handleUnauthorized(res) {
+      if (res.status === 401) {
+        redirectToLogin();
+        return true;
+      }
+      return false;
+    }
+
+    Promise.all([
+      fetch(`/api/appointments/${appointmentId}`),
+      fetch('/api/auth/me')
+    ])
+      .then(async ([apptRes, meRes]) => {
+        if (handleUnauthorized(apptRes) || handleUnauthorized(meRes)) return;
+
+        if (!apptRes.ok) {
+          alert('Appointment not found.');
+          window.location.href = 'mediportal-appointments-list.html';
+          return;
+        }
+
+        const apptData = await apptRes.json();
+        const meData = await meRes.json();
+        const appt = apptData.appointment;
+        const user = meData.user;
+
+        // Populate top nav user info
+        const fullName = user.full_name;
+        const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('navUserName').textContent = fullName;
+        document.getElementById('navPatientId').textContent = `Patient ID: ${user.patient_id}`;
+        document.getElementById('navUserInitials').textContent = initials;
+
+        // Populate current appointment info
+        const docInitials = appt.doctor_name.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('currentDocInitials').textContent = docInitials;
+        document.getElementById('currentDocName').textContent = appt.doctor_name;
+        document.getElementById('currentDocSpecialty').textContent = appt.specialty;
+        document.getElementById('currentDate').textContent = '📅 ' + new Date(appt.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        document.getElementById('currentTime').textContent = '🕒 ' + appt.time;
+
+        // Set summary doctor
+        summaryDoctor.textContent = appt.doctor_name;
+      })
+      .catch(err => {
+        console.error('Error loading data:', err);
+        alert('Error loading appointment data.');
+      });
+
+    // Confirm reschedule
+    confirmBtn.addEventListener('click', () => {
+      if (!selectedDate || !selectedTime) {
+        alert('Please select a new date and time.');
+        return;
+      }
+
+      const reason = document.getElementById('reasonInput').value.trim();
+
+      fetch(`/api/appointments/${appointmentId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          date: selectedDate,
+          time: selectedTime,
+          reason: reason || null
+        })
+      })
+        .then(res => {
+          if (handleUnauthorized(res)) return;
+          return res.json().then(data => ({ status: res.status, data }));
+        })
+        .then(({ status, data }) => {
+          if (status === 200) {
+            alert('Appointment rescheduled successfully.');
+            window.location.href = `appointment-details.html?id=${appointmentId}`;
+          } else {
+            alert(data.error || 'Could not reschedule appointment.');
+          }
+        })
+        .catch(err => {
+          console.error('Reschedule error:', err);
+          alert('Network error. Please try again.');
+        });
+    });
+  });
+</script>
+<script src="/js/logout.js"></script>
+</body>
+</html>

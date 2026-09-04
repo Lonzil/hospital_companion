@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encouragement Message v.15 — MediPortal</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --brand:#3D5AF1;
+    --brand-deep:#2E44C7;
+    --navy:#16326B;
+    --ink-soft:#5B6B85;
+    --ink-faint:#8895A9;
+    --line:#E7EAF2;
+    --bg-main:#F4F7FC;
+  }
+  
+  body{ 
+    font-family:'Inter',sans-serif; 
+    background:var(--bg-main); 
+    color:var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top Nav Styling */
+  .navbar-brand{ font-weight:800; color:var(--navy) !important; }
+  .brand-mark{ width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,#3D5AF1,#1F2FA0); display:flex; align-items:center; justify-content:center; }
+  .top-nav{ background:#EEF2FB; border-bottom:1px solid #E1E7F5; }
+  .top-nav .nav-link{ color:#2A3B57; font-weight:500; font-size:14.5px; }
+
+  /* Layout & Sidebar */
+  .layout{ display:flex; flex:1; }
+  .sidebar{ width:220px; border-right:1px solid var(--line); background:#fff; display:flex; flex-direction:column; justify-content:space-between; padding:24px 16px; flex-shrink:0; }
+  .side-link{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:9px; color:#4A5568; font-weight:500; font-size:14px; text-decoration:none; margin-bottom:4px; }
+  .side-link:hover{ background:#F5F7FB; color:var(--navy); }
+  .side-link.active{ background:var(--brand); color:#fff; font-weight:600; }
+  .side-link.danger{ color:#DC3545; }
+  .side-link.danger:hover{ background:#FDEDEE; }
+
+  /* Main Container */
+  main{ flex:1; padding:32px 40px; background:#F8FAFC; min-width:0; }
+
+  /* Section Title Header */
+  .page-title-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+  .section-badge{ background:#E8EEFF; color:var(--brand); font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; display:inline-flex; align-items:center; gap:6px; }
+
+  /* Encouragement Card Main Box */
+  .encouragement-card{
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 24px;
+  }
+
+  .card-illustration-side{
+    width: 38%;
+    background: #F2F5FB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+  }
+
+  .illustration-box{
+    width: 100%;
+    max-width: 200px;
+    height: 220px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .card-content-side{
+    flex: 1;
+    padding: 40px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .encouragement-quote{
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4A5568;
+    font-style: italic;
+    margin: 16px 0 24px 0;
+  }
+
+  /* Action Buttons Grid */
+  .action-buttons-grid{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .btn-primary-brand{
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .btn-primary-brand:hover{
+    color: white;
+  }
+
+  .btn-outline-custom{
+    background: #ffffff;
+    border: 1px solid var(--line);
+    color: var(--navy);
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  /* Support History Cards */
+  .history-item{
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 24px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+  }
+
+  .history-item:hover{
+    border-color: var(--brand);
+    transform: translateY(-1px);
+  }
+
+  .badge-archived{
+    font-size: 10px;
+    font-weight: 700;
+    color: #8895A9;
+    letter-spacing: 0.05em;
+    background: #F1F5F9;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* Page Footer */
+  footer{ 
+    border-top:1px solid var(--line); 
+    padding:16px 36px; 
+    font-size:12px; 
+    color:var(--ink-faint); 
+    background:#fff; 
+  }
+  footer a{ color:var(--ink-faint); text-decoration:none; margin-left:20px; }
+
+  @media(max-width: 900px){
+    .sidebar{ display:none; }
+    .encouragement-card{ flex-direction: column; }
+    .card-illustration-side{ width: 100%; }
+    .action-buttons-grid{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAVIGATION -->
+<nav class="navbar top-nav py-2">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="mediportal-dashboard.html">
+      <span class="brand-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg>
+      </span>
+      MediPortal
+    </a>
+    <ul class="navbar-nav flex-row gap-4 mx-auto">
+      <li class="nav-item"><a class="nav-link" href="mediportal-dashboard.html">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="mediportal-appointments-list.html">Appointments</a></li>
+      <li class="nav-item"><a class="nav-link" href="lab-results.html">Records</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Messages</a></li>
+    </ul>
+    <div class="d-flex align-items-center gap-3">
+      <div class="input-group input-group-sm d-none d-md-flex" style="width:220px;">
+        <span class="input-group-text bg-white border-end-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA6BB" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        </span>
+        <input type="text" class="form-control border-start-0" placeholder="Search records...">
+      </div>
+      <div class="position-relative">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4A5568" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle"></span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <div id="navUserInitials" class="rounded-circle d-flex align-items-center justify-content-center"
+             style="width:32px; height:32px; background:var(--brand); color:#fff; font-weight:700; font-size:12px;">
+          SJ
+        </div>
+        <div class="d-none d-sm-block" style="line-height:1.2;">
+          <div class="fw-semibold" id="navUserName" style="font-size:13px;">Loading...</div>
+          <div class="text-secondary" id="navPatientId" style="font-size:11px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar">
+    <div>
+      <a href="mediportal-dashboard.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="mediportal-appointments-list.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+        Appointments
+      </a>
+      <a href="lab-results.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2h6l1 4H8l1-4z"/><path d="M8 6l-3 14a2 2 0 002 2h10a2 2 0 002-2L16 6"/></svg>
+        Lab Results
+      </a>
+      <a href="#" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>
+        Messages
+      </a>
+      <a href="#" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        Health Profile
+      </a>
+      <a href="encouragement.html" class="side-link active">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        Encouragement
+      </a>
+    </div>
+    <div>
+      <a href="mediportal-settings.html" class="side-link">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+        Settings
+      </a>
+      <a href="mediportal-signin.html" class="side-link danger">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main>
+    
+    <!-- Title & Top Badge -->
+    <div class="page-title-row">
+      <div>
+        <h1 class="h5 fw-bold mb-1">💬 Encouragement for You</h1>
+        <p class="text-secondary mb-0" style="font-size: 13px;">A personalized moment of support for your healthcare journey.</p>
+      </div>
+      <div class="section-badge" id="badgeText">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Your Wellness
+      </div>
+    </div>
+
+    <!-- Main Message Card -->
+    <div class="encouragement-card">
+      <div class="card-illustration-side">
+        <div class="illustration-box">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FF5A79" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <div style="font-size: 22px; font-weight: 700; color: var(--brand); margin-top: 8px;">+</div>
+        </div>
+      </div>
+
+      <div class="card-content-side">
+        <div>
+          <h2 class="h5 fw-bold text-navy mb-3" id="patientGreeting">Dear Patient,</h2>
+          <p class="encouragement-quote" id="encouragementMessage">
+            Loading your personalized encouragement...
+          </p>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-end pt-3 border-top">
+          <div>
+            <div style="font-size: 10px; font-weight: 800; color: var(--brand); letter-spacing: 0.05em;">SENT WITH CARE FROM</div>
+            <div class="fw-bold d-flex align-items-center gap-1" style="font-size: 13px;">
+              <span style="color:#FF5A79;">💙</span> Your Hospital Companion Team
+            </div>
+          </div>
+          <div class="text-secondary fw-semibold" style="font-size: 11px;" id="messageDate"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons-grid">
+      <a href="#" class="btn-primary-brand" id="getNewMessageBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+        Get New Message
+      </a>
+      <button class="btn-outline-custom" id="shareBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share
+      </button>
+      <button class="btn-outline-custom" id="likeBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+        Like
+      </button>
+    </div>
+
+    <!-- Support History Section -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3 class="h6 fw-bold mb-0 d-flex align-items-center gap-2">
+        <span style="color: var(--brand);">✨</span> Your Support History
+      </h3>
+      <a href="#" class="fw-bold" style="font-size: 12px; color: var(--brand); text-decoration: none;">View All History</a>
+    </div>
+
+    <!-- History List -->
+    <div id="historyList">
+      <p class="text-center py-3 text-muted">Loading history...</p>
+    </div>
+
+    <!-- Security Badges Footer -->
+    <div class="d-flex justify-content-center gap-4 text-secondary mt-5" style="font-size: 11px; font-weight: 600;">
+      <span>🛡️ SECURE DATA ENCRYPTION</span>
+      <span>🤖 AI SUPPORT COMPANION</span>
+    </div>
+
+  </main>
+</div>
+
+<!-- PAGE FOOTER -->
+<footer>
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <span>© 2026 MediPortal Connect. All interactions are securely encrypted.</span>
+    <div>
+      <a href="#">PRIVACY POLICY</a>
+      <a href="#">TERMS OF SERVICE</a>
+      <a href="#">HELP CENTER</a>
+<a href="faqs.html">FAQs</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/auth-redirect.js"></script>
+<script>
+  function formatDate(dateStr) {
+    const date = new Date(dateStr + 'T00:00:00');
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+  }
+
+  function getCurrentDate() {
+    return new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+  }
+
+  // Fetch user info and initial data
+  function handleUnauthorized(res) {
+    if (res.status === 401) {
+      redirectToLogin();
+      return true;
+    }
+    return false;
+  }
+
+  async function loadUserInfo() {
+    try {
+      const res = await fetch('/api/auth/me');
+      if (handleUnauthorized(res)) return;
+      const data = await res.json();
+      if (data.user) {
+        const fullName = data.user.full_name;
+        const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('navUserName').textContent = fullName;
+        document.getElementById('navPatientId').textContent = `Patient ID: ${data.user.patient_id}`;
+        document.getElementById('navUserInitials').textContent = initials;
+        document.getElementById('patientGreeting').textContent = `Dear ${fullName},`;
+      }
+    } catch (err) {
+      console.error('User info error:', err);
+    }
+  }
+
+  async function loadEncouragement() {
+    try {
+      const res = await fetch('/api/ai/encouragement');
+      if (handleUnauthorized(res)) return;
+      const data = await res.json();
+      if (data.message) {
+        document.getElementById('encouragementMessage').textContent = data.message;
+        document.getElementById('messageDate').textContent = getCurrentDate();
+      }
+    } catch (err) {
+      console.error('Encouragement error:', err);
+      document.getElementById('encouragementMessage').textContent = "I'm here to support you. Please try again.";
+    }
+  }
+
+  async function loadHistory() {
+    const list = document.getElementById('historyList');
+    try {
+      const res = await fetch('/api/ai/history');
+      if (handleUnauthorized(res)) return;
+      const data = await res.json();
+      const history = data.history || [];
+      if (history.length === 0) {
+        list.innerHTML = '<p class="text-center py-3 text-muted">No previous messages.</p>';
+        return;
+      }
+      list.innerHTML = history.map(item => `
+        <div class="history-item">
+          <div class="d-flex align-items-center gap-3">
+            <span style="color: #FF5A79;">💙</span>
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-secondary" style="font-size: 11px; font-weight: 600;">${formatDate(item.created_at)}</span>
+                <span class="badge-archived">ARCHIVED</span>
+              </div>
+              <div class="fw-bold" style="font-size: 14px;">${item.context || 'Support Message'}</div>
+              <div class="text-secondary" style="font-size: 12px;">${item.message}</div>
+            </div>
+          </div>
+          <span class="text-secondary">&rsaquo;</span>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error('History error:', err);
+      list.innerHTML = '<p class="text-center py-3 text-danger">Error loading history.</p>';
+    }
+  }
+
+  // Action buttons
+  document.getElementById('getNewMessageBtn').addEventListener('click', async (e) => {
+    e.preventDefault();
+    loadEncouragement();
+    loadHistory();
+  });
+
+  document.getElementById('shareBtn').addEventListener('click', () => {
+    alert('Share feature coming soon.');
+  });
+
+  document.getElementById('likeBtn').addEventListener('click', () => {
+    alert('Thank you for your feedback!');
+  });
+
+  // Initial load
+  loadUserInfo();
+  loadEncouragement();
+  loadHistory();
+</script>
+<script src="/js/logout.js"></script>
+</body>
+</html>
