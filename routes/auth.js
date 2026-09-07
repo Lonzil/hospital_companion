@@ -2,8 +2,27 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const db = require('../db');
 const router = express.Router();
+
+// ----------------------------------------------------------------------
+// Configure Nodemailer transporter using Brevo SMTP
+// ----------------------------------------------------------------------
+const transporter = nodemailer.createTransport({
+  host: process.env.BREVO_SMTP_HOST || 'smtp-relay.brevo.com',
+  port: Number(process.env.BREVO_SMTP_PORT || 587),
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: process.env.BREVO_SMTP_USER,
+    pass: process.env.BREVO_SMTP_PASSWORD,
+  },
+});
+
+// Verify transporter configuration (does not fail startup)
+transporter.verify()
+  .then(() => console.log('✅ SMTP transporter ready'))
+  .catch((err) => console.error('❌ SMTP transporter error:', err.message));
 
 // ----------------------------------------------------------------------
 // Helper: require authentication
@@ -17,49 +36,38 @@ function requireAuth(req, res, next) {
 
 // ----------------------------------------------------------------------
 // Helper: get the correct base URL for links in emails
-// Reads X-Forwarded-Host and X-Forwarded-Proto when behind a proxy/tunnel.
-// Falls back to BASE_URL or request host when those headers are absent.
 // ----------------------------------------------------------------------
 function getBaseUrl(req) {
+  if (process.env.APP_BASE_URL) {
+    return process.env.APP_BASE_URL;
+  }
   if (process.env.BASE_URL) {
     return process.env.BASE_URL;
   }
-
   const forwardedHost = req.get('x-forwarded-host');
   const host = forwardedHost || req.get('host');
   const forwardedProto = req.get('x-forwarded-proto');
   const protocol = forwardedProto || req.protocol || 'http';
-
   return `${protocol}://${host}`;
 }
 
 // ----------------------------------------------------------------------
-// Helper: send email using Resend API
+// Helper: send email using Brevo SMTP
 // ----------------------------------------------------------------------
 async function sendEmail(toEmail, subject, html) {
-  const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  if (!RESEND_API_KEY) {
-    throw new Error('Missing RESEND_API_KEY');
+  const fromName = process.env.EMAIL_FROM_NAME || 'Hospital Companion';
+  const fromAddress = process.env.EMAIL_FROM;
+
+  if (!fromAddress) {
+    throw new Error('Missing EMAIL_FROM environment variable');
   }
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: 'Hospital Companion <onboarding@resend.dev>',
-      to: [toEmail],
-      subject: subject,
-      html: html,
-    }),
+  await transporter.sendMail({
+    from: `"${fromName}" <${fromAddress}>`,
+    to: toEmail,
+    subject: subject,
+    html: html,
   });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Email send failed: ${response.status} ${errorText}`);
-  }
 }
 
 // ----------------------------------------------------------------------
@@ -117,10 +125,10 @@ router.post('/signup', async (req, res) => {
 
     await sendEmail(email, 'Verify Your Email Address', html);
   } catch (error) {
+    console.error('Error sending verification email:', error.message);
     db.prepare('DELETE FROM email_verifications WHERE user_id = ?').run(userId);
     db.prepare('DELETE FROM users WHERE id = ?').run(userId);
-    console.error('Error sending verification email:', error);
-    return res.status(500).json({ error: 'Could not send verification email. Please try again.' });
+    return res.status(500).json({ error: 'Unable to send the email right now. Please try again later.' });
   }
 
   res.status(201).json({ message: 'Verification email sent. Please check your inbox.' });
@@ -153,10 +161,8 @@ router.post('/login', (req, res) => {
 
   db.prepare("UPDATE users SET last_login = datetime('now') WHERE id = ?").run(user.id);
 
-  // Set session user ID
   req.session.userId = user.id;
 
-  // Remember me functionality: extend cookie maxAge if requested
   if (remember === true) {
     req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
   } else {
@@ -237,7 +243,7 @@ router.get('/verify-email', (req, res) => {
 
 // ----------------------------------------------------------------------
 // POST /api/auth/forgot-password
-// Generate reset token and send email using Resend
+// Generate reset token and send email
 // ----------------------------------------------------------------------
 router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
@@ -275,8 +281,8 @@ router.post('/forgot-password', async (req, res) => {
 
     res.json({ message: 'If that email exists, a reset link has been sent.' });
   } catch (error) {
-    console.error('Error sending password reset email:', error);
-    res.status(500).json({ error: 'Failed to process request. Please try again later.' });
+    console.error('Error sending password reset email:', error.message);
+    res.status(500).json({ error: 'Unable to send the email right now. Please try again later.' });
   }
 });
 
