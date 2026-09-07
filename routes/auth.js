@@ -2,20 +2,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
 const db = require('../db');
 const router = express.Router();
-
-// ----------------------------------------------------------------------
-// Configure Nodemailer transporter (Gmail SMTP)
-// ----------------------------------------------------------------------
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
 // ----------------------------------------------------------------------
 // Helper: require authentication
@@ -46,27 +34,32 @@ function getBaseUrl(req) {
 }
 
 // ----------------------------------------------------------------------
-// Helper: send verification email
+// Helper: send email using Resend API
 // ----------------------------------------------------------------------
-async function sendVerificationEmail(toEmail, token, baseUrl) {
-  const verificationLink = `${baseUrl}/api/auth/verify-email?token=${token}`;
+async function sendEmail(toEmail, subject, html) {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  if (!RESEND_API_KEY) {
+    throw new Error('Missing RESEND_API_KEY');
+  }
 
-  await transporter.sendMail({
-    from: `"Hospital Companion" <${process.env.EMAIL_USER}>`,
-    to: toEmail,
-    subject: 'Verify Your Email Address',
-    text: `Welcome to Hospital Companion! Please verify your email address by clicking the link below:\n\n${verificationLink}\n\nThis link will expire in 30 minutes. If you did not create an account, please ignore this email.`,
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #16326B;">Verify Your Email Address</h2>
-        <p>Welcome to Hospital Companion! Please click the button below to verify your email address and activate your account.</p>
-        <p><a href="${verificationLink}" style="display: inline-block; background: #3D5AF1; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 6px;">Verify Email</a></p>
-        <p>If the button doesn't work, copy and paste this link into your web browser:</p>
-        <p>${verificationLink}</p>
-        <p>This link expires in 30 minutes. If you did not create an account, you can safely ignore this email.</p>
-      </div>
-    `,
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Hospital Companion <onboarding@resend.dev>',
+      to: [toEmail],
+      subject: subject,
+      html: html,
+    }),
   });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Email send failed: ${response.status} ${errorText}`);
+  }
 }
 
 // ----------------------------------------------------------------------
@@ -109,7 +102,20 @@ router.post('/signup', async (req, res) => {
 
   try {
     const baseUrl = getBaseUrl(req);
-    await sendVerificationEmail(email, token, baseUrl);
+    const verificationLink = `${baseUrl}/api/auth/verify-email?token=${token}`;
+
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #16326B;">Verify Your Email Address</h2>
+        <p>Welcome to Hospital Companion! Please click the button below to verify your email address and activate your account.</p>
+        <p><a href="${verificationLink}" style="display: inline-block; background: #3D5AF1; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 6px;">Verify Email</a></p>
+        <p>If the button doesn't work, copy and paste this link into your web browser:</p>
+        <p>${verificationLink}</p>
+        <p>This link expires in 30 minutes. If you did not create an account, you can safely ignore this email.</p>
+      </div>
+    `;
+
+    await sendEmail(email, 'Verify Your Email Address', html);
   } catch (error) {
     db.prepare('DELETE FROM email_verifications WHERE user_id = ?').run(userId);
     db.prepare('DELETE FROM users WHERE id = ?').run(userId);
@@ -152,10 +158,8 @@ router.post('/login', (req, res) => {
 
   // Remember me functionality: extend cookie maxAge if requested
   if (remember === true) {
-    // 30 days
     req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
   } else {
-    // 1 day
     req.session.cookie.maxAge = 1000 * 60 * 60 * 24;
   }
 
@@ -169,7 +173,6 @@ router.post('/login', (req, res) => {
     last_login: user.last_login
   };
 
-  // Explicitly save the session so the cookie is updated immediately
   req.session.save((err) => {
     if (err) {
       console.error('Session save error:', err);
@@ -234,7 +237,7 @@ router.get('/verify-email', (req, res) => {
 
 // ----------------------------------------------------------------------
 // POST /api/auth/forgot-password
-// Generate reset token and send real email
+// Generate reset token and send email using Resend
 // ----------------------------------------------------------------------
 router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
@@ -256,22 +259,18 @@ router.post('/forgot-password', async (req, res) => {
       const baseUrl = getBaseUrl(req);
       const resetLink = `${baseUrl}/mediportal-reset-password.html?token=${token}`;
 
-      await transporter.sendMail({
-        from: `"Hospital Companion" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'Password Reset Request',
-        text: `You requested a password reset. Click the following link to reset your password:\n\n${resetLink}\n\nThis link will expire in 30 minutes. If you did not request this, please ignore this email.`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #16326B;">Password Reset Request</h2>
-            <p>You requested a password reset for your Hospital Companion account.</p>
-            <p><a href="${resetLink}" style="display: inline-block; background: #3D5AF1; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 6px;">Reset Password</a></p>
-            <p>If the button doesn't work, copy and paste this link into your web browser:</p>
-            <p>${resetLink}</p>
-            <p>This link expires in 30 minutes. If you did not request a password reset, you can safely ignore this email.</p>
-          </div>
-        `,
-      });
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #16326B;">Password Reset Request</h2>
+          <p>You requested a password reset for your Hospital Companion account.</p>
+          <p><a href="${resetLink}" style="display: inline-block; background: #3D5AF1; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 6px;">Reset Password</a></p>
+          <p>If the button doesn't work, copy and paste this link into your web browser:</p>
+          <p>${resetLink}</p>
+          <p>This link expires in 30 minutes. If you did not request a password reset, you can safely ignore this email.</p>
+        </div>
+      `;
+
+      await sendEmail(email, 'Password Reset Request', html);
     }
 
     res.json({ message: 'If that email exists, a reset link has been sent.' });
