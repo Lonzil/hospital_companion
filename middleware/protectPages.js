@@ -13,7 +13,9 @@ const protectedPages = [
   '/encouragement.html',
   '/notifications.html',
   '/mediportal-settings.html',
-  '/reminder-settings.html'
+  '/reminder-settings.html',
+  '/messages.html',
+  '/health-profile.html'
 ];
 
 function protectPages(req, res, next) {

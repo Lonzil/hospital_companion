@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages — MediPortal</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #3D5AF1;
+    --brand-deep: #2E44C7;
+    --navy: #16326B;
+    --ink-soft: #5B6B85;
+    --ink-faint: #8895A9;
+    --line: #E7EAF2;
+    --bg-main: #F4F7FC;
+  }
+  body { font-family:'Inter',sans-serif; background:var(--bg-main); color:var(--navy); min-height:100vh; display:flex; flex-direction:column; }
+  .navbar-brand { font-weight:800; color:var(--navy) !important; }
+  .brand-mark { width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,#3D5AF1,#1F2FA0); display:flex; align-items:center; justify-content:center; }
+  .top-nav { background:#EEF2FB; border-bottom:1px solid #E1E7F5; }
+  .top-nav .nav-link { color:#2A3B57; font-weight:500; font-size:14.5px; }
+  .layout { display:flex; flex:1; }
+  .sidebar { width:220px; border-right:1px solid var(--line); background:#fff; display:flex; flex-direction:column; justify-content:space-between; padding:24px 16px; flex-shrink:0; }
+  .side-link { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:9px; color:#4A5568; font-weight:500; font-size:14px; text-decoration:none; margin-bottom:4px; }
+  .side-link:hover { background:#F5F7FB; color:var(--navy); }
+  .side-link.active { background:var(--brand); color:#fff; font-weight:600; }
+  .side-link.danger { color:#DC3545; }
+  .side-link.danger:hover { background:#FDEDEE; }
+  main { flex:1; padding:40px; background:#F8FAFC; }
+  .empty-state { background:#fff; border:1px solid var(--line); border-radius:12px; padding:60px 20px; text-align:center; max-width:600px; margin:40px auto; }
+  .empty-state h2 { color:var(--navy); font-weight:700; margin-bottom:12px; }
+  .empty-state p { color:var(--ink-soft); font-size:14.5px; margin-bottom:0; }
+  footer { border-top:1px solid var(--line); padding:16px 36px; font-size:12px; color:var(--ink-faint); background:#fff; }
+  @media(max-width:900px){ .sidebar{display:none;} main{padding:20px;} }
+</style>
+</head>
+<body>
+<nav class="navbar top-nav py-2">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="mediportal-dashboard.html">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M2 12h4l2 7 4-14 2 7h8"/></svg></span>
+      MediPortal
+    </a>
+    <ul class="navbar-nav flex-row gap-4 mx-auto">
+      <li class="nav-item"><a class="nav-link" href="mediportal-dashboard.html">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="mediportal-appointments-list.html">Appointments</a></li>
+      <li class="nav-item"><a class="nav-link" href="lab-results.html">Records</a></li>
+      <li class="nav-item"><a class="nav-link active" href="messages.html">Messages</a></li>
+    </ul>
+    <div class="d-flex align-items-center gap-2">
+      <div id="navUserInitials" class="rounded-circle d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:var(--brand);color:#fff;font-weight:700;font-size:12px;">SJ</div>
+      <div class="d-none d-sm-block" style="line-height:1.2;">
+        <div class="fw-semibold" id="navUserName" style="font-size:13px;">Loading...</div>
+        <div class="text-secondary" id="navPatientId" style="font-size:11px;"></div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="layout">
+  <aside class="sidebar">
+    <div>
+      <a href="mediportal-dashboard.html" class="side-link">Dashboard</a>
+      <a href="mediportal-appointments-list.html" class="side-link">Appointments</a>
+      <a href="lab-results.html" class="side-link">Lab Results</a>
+      <a href="messages.html" class="side-link active">Messages</a>
+      <a href="health-profile.html" class="side-link">Health Profile</a>
+      <a href="ai-support.html" class="side-link">AI Support</a>
+      <a href="encouragement.html" class="side-link">Encouragement</a>
+      <a href="notifications.html" class="side-link">Notifications</a>
+    </div>
+    <div>
+      <a href="mediportal-settings.html" class="side-link">Settings</a>
+      <a href="mediportal-signin.html" class="side-link danger">Sign Out</a>
+    </div>
+  </aside>
+  <main>
+    <div class="empty-state">
+      <h2>Messages</h2>
+      <p>Your secure message center is coming soon. You'll be able to communicate with your care team here.</p>
+    </div>
+  </main>
+</div>
+<footer class="d-flex justify-content-between align-items-center">
+  <span>© 2026 MediPortal Connect. All rights reserved.</span>
+  <div><a href="#">Privacy</a><a href="#">Terms</a><a href="faqs.html">FAQs</a></div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/auth-redirect.js"></script>
+<script>
+  fetch('/api/auth/me')
+    .then(res => {
+      if (res.status === 401) { redirectToLogin(); return null; }
+      return res.json();
+    })
+    .then(data => {
+      if (data && data.user) {
+        const u = data.user;
+        const initials = u.full_name.split(' ').map(n=>n[0]).join('').toUpperCase();
+        document.getElementById('navUserName').textContent = u.full_name;
+        document.getElementById('navPatientId').textContent = `Patient ID: ${u.patient_id}`;
+        document.getElementById('navUserInitials').textContent = initials;
+      }
+    })
+    .catch(()=>{});
+</script>
+<script src="/js/logout.js"></script>
+</body>
+</html>
